@@ -451,6 +451,174 @@ canvas.on('mouse:wheel', function(opt) {
 
 });
 
+// ===== SIDEBAR INTERACTIONS =====
+const tabButtons = document.querySelectorAll('.tab-btn');
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ===== TOOL SIDEBAR =====
+const sidebarButtons = document.querySelectorAll('.sidebar-btn');
+
+sidebarButtons.forEach((btn, index) => {
+
+  btn.addEventListener('click', () => {
+
+    sidebarButtons.forEach(b => {
+      b.style.background = 'rgba(255,255,255,0.03)';
+      b.style.borderColor = 'rgba(255,255,255,0.06)';
+    });
+
+    btn.style.background = 'rgba(0,183,209,0.18)';
+    btn.style.borderColor = 'rgba(74,246,210,0.3)';
+
+    if(index === 0){
+      document.getElementById('headline').focus();
+    }
+
+    if(index === 2){
+
+      const rect = new fabric.Rect({
+        left: 250,
+        top: 700,
+        width: 220,
+        height: 120,
+        fill: 'rgba(0,183,209,0.25)',
+        rx: 18,
+        ry: 18,
+        stroke: '#4af6d2',
+        strokeWidth: 1
+      });
+
+      canvas.add(rect);
+      canvas.setActiveObject(rect);
+      canvas.renderAll();
+
+    }
+
+    if(index === 3){
+
+      headline.set({
+        shadow: '0 0 30px rgba(74,246,210,0.6)'
+      });
+
+      canvas.renderAll();
+
+    }
+
+  });
+
+});
+
+// ===== MOBILE MENU =====
+const mobileButtons = document.querySelectorAll('#mobile-bottom-bar button');
+
+mobileButtons.forEach((btn,index) => {
+
+  btn.addEventListener('click', () => {
+
+    mobileButtons.forEach(b => {
+      b.style.color = 'white';
+    });
+
+    btn.style.color = '#4af6d2';
+
+    if(index === 0){
+      document.getElementById('headline').focus();
+    }
+
+    if(index === 1){
+      document.getElementById('bgUpload').click();
+    }
+
+    if(index === 2){
+
+      const circle = new fabric.Circle({
+        radius: 70,
+        fill: 'rgba(255,255,255,0.12)',
+        left: 400,
+        top: 760,
+        stroke: '#4af6d2',
+        strokeWidth: 1
+      });
+
+      canvas.add(circle);
+      canvas.setActiveObject(circle);
+      canvas.renderAll();
+
+    }
+
+    if(index === 3){
+
+      const lang = document.getElementById('language');
+
+      if(lang.value === 'fa'){
+        headline.text = document.getElementById('headline').value;
+      }
+
+      if(lang.value === 'en'){
+        headline.text = document.getElementById('transEn').value;
+      }
+
+      if(lang.value === 'ar'){
+        headline.text = document.getElementById('transAr').value;
+      }
+
+      if(lang.value === 'bn'){
+        headline.text = document.getElementById('transBn').value;
+      }
+
+      canvas.renderAll();
+
+    }
+
+    if(index === 4){
+      exportPNG();
+    }
+
+  });
+
+});
+
+// ===== OBJECT SELECTION =====
+canvas.on('selection:created', updatePanel);
+canvas.on('selection:updated', updatePanel);
+
+function updatePanel(){
+
+  const active = canvas.getActiveObject();
+
+  if(!active) return;
+
+  if(active.type === 'textbox'){
+
+    document.getElementById('fontSize').value = active.fontSize || 64;
+    document.getElementById('fontFamily').value = active.fontFamily || 'Vazirmatn';
+
+  }
+
+}
+
+// ===== DELETE KEY =====
+document.addEventListener('keydown', e => {
+
+  if(e.key === 'Delete'){
+
+    const active = canvas.getActiveObject();
+
+    if(active){
+      canvas.remove(active);
+      canvas.renderAll();
+    }
+
+  }
+
+});
+
 // ===== MOBILE RESPONSIVE =====
 function resizeCanvas(){
 
