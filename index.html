@@ -1,198 +1,471 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<!DOCTYPE html><html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TebMed Command Center | Pro Edition</title>
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0B1120">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Vazirmatn:wght@400;700&family=Zain:wght@400;700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-<style>
-    :root { --accent: #4AF6D2; --primary: #00B7D1; }
-    body { 
-        background-color: #0B1120; 
-        background-image: radial-gradient(ellipse at 20% 30%, rgba(0,183,209,0.1) 0%, transparent 50%);
-        color: #e2e8f0; font-family: 'Inter', 'Vazirmatn', sans-serif; margin: 0;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TebMed Social Studio</title>  <!-- Tailwind -->  <script src="https://cdn.tailwindcss.com"></script>  <!-- Fabric.js -->  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>  <!-- Fonts -->  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;600;700&family=Vazirmatn:wght@400;500;700&family=Lalezar&family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">  <style>
+    * {
+      box-sizing: border-box;
     }
-    .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
-    .accent-text { background: linear-gradient(135deg, #4AF6D2 0%, #00B7D1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
-    .control-card { transition: all 0.3s ease; }
-    .control-card:hover { border-color: var(--accent); }
-    
-    input, textarea, select { 
-        background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); 
-        color: #fff; border-radius: 12px; padding: 10px; width: 100%; font-size: 13px;
+    body {
+      margin: 0;
+      background: #0b1120;
+      color: white;
+      font-family: Vazirmatn, sans-serif;
+      overflow: hidden;
     }
-    .btn-pro { background: linear-gradient(135deg, #00B7D1, #4AF6D2); color: #0F172A; font-weight: 700; padding: 10px 20px; border-radius: 12px; transition: 0.3s; }
-    .btn-pro:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,183,209,0.4); }
-</style>
-</head>
-<body class="p-4 lg:p-6">
 
-<header class="flex justify-between items-center max-w-[1400px] mx-auto mb-8">
-    <div class="flex items-center gap-4">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00B7D1] to-[#4AF6D2] flex items-center justify-center">
-            <i class="fas fa-plus text-slate-900 font-bold"></i>
-        </div>
-        <div>
-            <h1 class="text-xl font-bold tracking-tight">TebMed<span class="accent-text">Tourism</span></h1>
-            <p class="text-[9px] text-slate-500 uppercase tracking-widest">Command Center Pro</p>
-        </div>
-    </div>
-    <button onclick="downloadAll()" class="btn-pro text-xs">Export Designs</button>
-</header>
+    .glass {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
 
-<main class="max-w-[1400px] mx-auto grid grid-cols-1 xl:grid-cols-12 gap-6">
-    
-    <aside class="xl:col-span-3 space-y-5 overflow-y-auto max-h-[85vh] pr-2">
-        
-        <div class="glass p-5 control-card">
-            <h3 class="text-xs font-bold text-[#4AF6D2] uppercase tracking-wider mb-4">Background & Canvas</h3>
-            <div class="space-y-4">
-                <button onclick="document.getElementById('bgInput').click()" class="w-full py-8 border-2 border-dashed border-white/10 rounded-2xl hover:border-[#00B7D1] transition-all text-slate-500 text-xs">
-                    <i class="fas fa-cloud-upload-alt text-lg mb-2 block"></i> Upload Image
-                </button>
-                <input type="file" id="bgInput" class="hidden" onchange="handleImage(event)">
-                
-                <div>
-                    <label class="text-[11px] text-slate-400 mb-2 block">Overlay Opacity</label>
-                    <input type="range" id="overlayRange" min="0" max="90" value="30" oninput="updateCanvas()">
-                </div>
-            </div>
-        </div>
+    .sidebar-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-        <div class="glass p-5 control-card">
-            <h3 class="text-xs font-bold text-[#4AF6D2] uppercase tracking-wider mb-4">Smart Translation</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="text-[11px] text-slate-400 block mb-1">Persian (Master)</label>
-                    <textarea id="textFa" rows="2" dir="rtl" oninput="updateCanvas()">مراقبت پزشکی در سطح جهانی</textarea>
-                </div>
-                <div>
-                    <label class="text-[11px] text-slate-400 block mb-1">Bengali</label>
-                    <textarea id="textBn" rows="2" oninput="updateCanvas()" placeholder="বাংলা অনুবাদ..."></textarea>
-                </div>
-                <button onclick="mockTranslate()" class="w-full py-2 bg-white/5 border border-white/10 rounded-lg text-[11px] hover:bg-white/10">
-                    <i class="fas fa-language mr-1"></i> Auto-Translate All
-                </button>
-            </div>
-        </div>
+    .sidebar-btn:hover {
+      background: rgba(0,183,209,0.18);
+      border-color: rgba(74,246,210,0.3);
+    }
 
-        <div class="glass p-5 control-card">
-            <h3 class="text-xs font-bold text-[#4AF6D2] uppercase tracking-wider mb-4">Image Filters</h3>
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="setFilter('grayscale(100%)')" class="py-2 bg-slate-800 rounded-lg text-[10px]">B&W</button>
-                <button onclick="setFilter('sepia(60%)')" class="py-2 bg-slate-800 rounded-lg text-[10px]">Warm</button>
-                <button onclick="setFilter('contrast(130%)')" class="py-2 bg-slate-800 rounded-lg text-[10px]">Contrast</button>
-                <button onclick="setFilter('none')" class="py-2 bg-red-900/20 rounded-lg text-[10px]">Reset</button>
-            </div>
-        </div>
-    </aside>
+    .panel-input,
+    .panel-select,
+    .panel-textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.25);
+      color: white;
+      padding: 10px 12px;
+      outline: none;
+      font-size: 13px;
+    }
 
-    <section class="xl:col-span-9">
-        <div class="glass p-6 min-h-[70vh] flex flex-col items-center justify-center relative">
-            <div class="absolute top-6 left-6 flex gap-4">
-                <div class="px-4 py-2 bg-white/5 rounded-full border border-white/10 text-[11px]">
-                    <span class="text-[#4AF6D2]">●</span> Live Preview
-                </div>
-            </div>
+    .panel-input:focus,
+    .panel-select:focus,
+    .panel-textarea:focus {
+      border-color: #00b7d1;
+    }
 
-            <div class="bg-black shadow-2xl rounded-3xl overflow-hidden border-[8px] border-[#1e293b]">
-                <canvas id="mainCanvas" width="1080" height="1350" style="max-width: 450px; width: 100%; height: auto;"></canvas>
-            </div>
-            
-            <p class="mt-6 text-slate-500 text-[11px]">Resolution: 1080x1350 (Vertical Optimized)</p>
-        </div>
-    </section>
+    .toolbar-btn {
+      border-radius: 12px;
+      background: linear-gradient(135deg,#00b7d1,#4af6d2);
+      color: #0b1120;
+      font-weight: 700;
+      border: none;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    #canvas-wrapper {
+      background:
+      radial-gradient(circle at top left, rgba(0,183,209,0.15), transparent 30%),
+      radial-gradient(circle at bottom right, rgba(74,246,210,0.12), transparent 30%),
+      #111827;
+    }
+
+    .property-title {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .tab-btn {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .tab-btn.active {
+      background: rgba(0,183,209,0.2);
+      border-color: rgba(74,246,210,0.4);
+      color: #4af6d2;
+    }
+
+    @media(max-width:1024px){
+      .desktop-only {
+        display:none;
+      }
+
+      #mobile-bottom-bar {
+        display:flex;
+      }
+    }
+  </style></head>
+<body><div class="h-screen flex flex-col">  <!-- TOPBAR -->  <header class="glass h-16 flex items-center justify-between px-5 border-b border-white/5"><div class="flex items-center gap-3">
+  <div class="w-10 h-10 rounded-xl bg-cyan-400 flex items-center justify-center text-black font-bold">
+    T
+  </div>
+
+  <div>
+    <div class="font-bold text-lg">TebMed Social Studio</div>
+    <div class="text-[10px] text-slate-400">Medical Tourism Cover Builder</div>
+  </div>
+</div>
+
+<div class="flex items-center gap-2">
+  <button class="toolbar-btn" onclick="exportPNG()">PNG خروجی</button>
+  <button class="toolbar-btn" onclick="exportJPG()">JPG خروجی</button>
+</div>
+
+  </header>  <!-- MAIN -->  <div class="flex-1 flex overflow-hidden"><!-- LEFT SIDEBAR -->
+<aside class="glass w-20 desktop-only border-l border-white/5 flex flex-col items-center gap-3 py-4">
+
+  <div class="sidebar-btn">📝</div>
+  <div class="sidebar-btn">🖼️</div>
+  <div class="sidebar-btn">⬜</div>
+  <div class="sidebar-btn">🎨</div>
+  <div class="sidebar-btn">🌍</div>
+  <div class="sidebar-btn">📦</div>
+  <div class="sidebar-btn">⚙️</div>
+
+</aside>
+
+<!-- CANVAS -->
+<main class="flex-1 flex items-center justify-center overflow-auto p-6" id="canvas-wrapper">
+
+  <div class="rounded-[30px] overflow-hidden shadow-2xl border border-white/10 bg-black">
+    <canvas id="editorCanvas" width="1080" height="1350"></canvas>
+  </div>
+
 </main>
 
-<script>
-    const canvas = document.getElementById('mainCanvas');
-    const ctx = canvas.getContext('2d');
-    let userImg = null;
-    let currentFilter = 'none';
+<!-- RIGHT PANEL -->
+<aside class="glass w-[360px] desktop-only border-r border-white/5 overflow-y-auto p-5">
 
-    function handleImage(e) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const img = new Image();
-            img.onload = () => { userImg = img; updateCanvas(); };
-            img.src = event.target.result;
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    }
+  <!-- TABS -->
+  <div class="flex gap-2 mb-5">
+    <div class="tab-btn active">متن</div>
+    <div class="tab-btn">ترجمه</div>
+    <div class="tab-btn">فیلتر</div>
+    <div class="tab-btn">خروجی</div>
+  </div>
 
-    function setFilter(f) { currentFilter = f; updateCanvas(); }
+  <!-- TEXT -->
+  <div class="mb-5">
+    <div class="property-title">تیتر اصلی</div>
+    <textarea id="headline" class="panel-textarea" rows="3">مراقبت پزشکی در سطح جهانی</textarea>
+  </div>
 
-    function updateCanvas() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Background
-        if (userImg) {
-            ctx.filter = currentFilter;
-            ctx.drawImage(userImg, 0, 0, canvas.width, canvas.height);
-            ctx.filter = 'none';
-        } else {
-            ctx.fillStyle = '#111827';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
+  <!-- LANG -->
+  <div class="grid grid-cols-2 gap-3 mb-5">
 
-        // Overlay
-        const op = document.getElementById('overlayRange').value / 100;
-        ctx.fillStyle = `rgba(11, 17, 32, ${op})`;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    <div>
+      <div class="property-title">زبان</div>
+      <select id="language" class="panel-select">
+        <option value="fa">فارسی</option>
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+        <option value="bn">বাংলা</option>
+      </select>
+    </div>
 
-        // Persian Text
-        const fa = document.getElementById('textFa').value;
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
-        ctx.font = 'bold 70px Vazirmatn';
-        ctx.fillText(fa, canvas.width/2, canvas.height/2 - 20);
+    <div>
+      <div class="property-title">فونت</div>
+      <select id="fontFamily" class="panel-select">
+        <option value="Vazirmatn">Vazirmatn</option>
+        <option value="Lalezar">Lalezar</option>
+        <option value="Inter">Inter</option>
+        <option value="Montserrat">Montserrat</option>
+        <option value="Playfair Display">Playfair</option>
+        <option value="Cairo">Cairo</option>
+        <option value="Tajawal">Tajawal</option>
+        <option value="Hind Siliguri">Hind Siliguri</option>
+      </select>
+    </div>
 
-        // Bengali Text
-        const bn = document.getElementById('textBn').value;
-        if(bn) {
-            ctx.fillStyle = '#4AF6D2';
-            ctx.font = '40px Hind Siliguri';
-            ctx.fillText(bn, canvas.width/2, canvas.height/2 + 60);
-        }
+  </div>
 
-        // Branding
-        ctx.fillStyle = 'rgba(255,255,255,0.2)';
-        ctx.font = '25px Inter';
-        ctx.fillText('TEBMED TOURISM', canvas.width/2, canvas.height - 100);
-    }
+  <!-- FONT SIZE -->
+  <div class="mb-5">
+    <div class="property-title">اندازه فونت</div>
+    <input type="range" id="fontSize" min="20" max="120" value="64" class="w-full">
+  </div>
 
-    async function mockTranslate() {
-        const text = document.getElementById('textFa').value;
-        document.getElementById('textBn').value = "অপেক্ষা করুন..."; 
-        // در اینجا می‌توانید کد اتصال به API ترجمه را قرار دهید
-        setTimeout(() => {
-            document.getElementById('textBn').value = "বিশ্বমানের চিকিৎসা সেবা";
-            updateCanvas();
-        }, 1000);
-    }
+  <!-- COLOR -->
+  <div class="mb-5">
+    <div class="property-title">رنگ متن</div>
+    <input type="color" id="textColor" value="#ffffff" class="w-full h-12 rounded-xl overflow-hidden border-none bg-transparent">
+  </div>
 
-    function downloadAll() {
-        const link = document.createElement('a');
-        link.download = 'tebmed-design.png';
-        link.href = canvas.toDataURL();
-        link.click();
-    }
+  <!-- BG IMAGE -->
+  <div class="mb-5">
+    <div class="property-title">تصویر پس‌زمینه</div>
+    <input type="file" id="bgUpload" class="panel-input" accept="image/*">
+  </div>
 
-    window.onload = updateCanvas;
-</script>
+  <!-- TRANSLATION -->
+  <div class="space-y-4">
 
-</body>
+    <div>
+      <div class="property-title">English</div>
+      <textarea class="panel-textarea" id="transEn">World-Class Medical Care</textarea>
+    </div>
+
+    <div>
+      <div class="property-title">العربية</div>
+      <textarea class="panel-textarea" id="transAr">رعاية طبية عالمية المستوى</textarea>
+    </div>
+
+    <div>
+      <div class="property-title">বাংলা</div>
+      <textarea class="panel-textarea" id="transBn">বিশ্বমানের চিকিৎসা সেবা</textarea>
+    </div>
+
+  </div>
+
+</aside>
+
+  </div></div><!-- MOBILE BOTTOM BAR --><div id="mobile-bottom-bar" class="hidden fixed bottom-0 left-0 right-0 h-16 glass border-t border-white/10 items-center justify-around z-50">
+  <button>متن</button>
+  <button>تصویر</button>
+  <button>شکل</button>
+  <button>ترجمه</button>
+  <button>خروجی</button>
+</div><script>
+
+const canvas = new fabric.Canvas('editorCanvas', {
+  preserveObjectStacking: true,
+  selection: true
+});
+
+canvas.setBackgroundColor('#111827', canvas.renderAll.bind(canvas));
+
+// ===== BACKGROUND =====
+const bgRect = new fabric.Rect({
+  left: 0,
+  top: 0,
+  width: 1080,
+  height: 1350,
+  fill: '#111827',
+  selectable: false
+});
+
+canvas.add(bgRect);
+
+// ===== GLASS CARD =====
+const glassCard = new fabric.Rect({
+  left: 80,
+  top: 140,
+  width: 920,
+  height: 1050,
+  rx: 40,
+  ry: 40,
+  fill: 'rgba(255,255,255,0.06)',
+  stroke: 'rgba(255,255,255,0.08)',
+  strokeWidth: 1,
+  selectable: false
+});
+
+canvas.add(glassCard);
+
+// ===== HEADLINE =====
+const headline = new fabric.Textbox('مراقبت پزشکی در سطح جهانی', {
+  left: 130,
+  top: 260,
+  width: 820,
+  fontSize: 64,
+  fill: '#ffffff',
+  fontFamily: 'Vazirmatn',
+  textAlign: 'center',
+  editable: true,
+  lineHeight: 1.3,
+  fontWeight: '700'
+});
+
+canvas.add(headline);
+canvas.setActiveObject(headline);
+
+// ===== SUBTITLE =====
+const subtitle = new fabric.Textbox('Hair Transplant • Dental • IVF • Cosmetic Surgery', {
+  left: 180,
+  top: 470,
+  width: 720,
+  fontSize: 32,
+  fill: '#4af6d2',
+  fontFamily: 'Inter',
+  textAlign: 'center'
+});
+
+canvas.add(subtitle);
+
+// ===== CTA =====
+const cta = new fabric.Rect({
+  left: 360,
+  top: 980,
+  width: 360,
+  height: 90,
+  rx: 20,
+  ry: 20,
+  fill: '#00b7d1'
+});
+
+const ctaText = new fabric.Text('Book Consultation', {
+  left: 430,
+  top: 1010,
+  fill: '#0b1120',
+  fontSize: 30,
+  fontFamily: 'Inter',
+  fontWeight: '700'
+});
+
+canvas.add(cta);
+canvas.add(ctaText);
+
+// ===== LIVE CONTROLS =====
+document.getElementById('headline').addEventListener('input', e => {
+  headline.text = e.target.value;
+  canvas.renderAll();
+});
+
+// FONT
+
+document.getElementById('fontFamily').addEventListener('change', e => {
+  headline.fontFamily = e.target.value;
+  canvas.renderAll();
+});
+
+// SIZE
+
+document.getElementById('fontSize').addEventListener('input', e => {
+  headline.fontSize = parseInt(e.target.value);
+  canvas.renderAll();
+});
+
+// COLOR
+
+document.getElementById('textColor').addEventListener('input', e => {
+  headline.fill = e.target.value;
+  canvas.renderAll();
+});
+
+// LANGUAGE
+
+document.getElementById('language').addEventListener('change', e => {
+
+  const lang = e.target.value;
+
+  if(lang === 'fa'){
+    headline.fontFamily = 'Vazirmatn';
+    headline.textAlign = 'center';
+  }
+
+  if(lang === 'ar'){
+    headline.fontFamily = 'Cairo';
+  }
+
+  if(lang === 'bn'){
+    headline.fontFamily = 'Hind Siliguri';
+  }
+
+  if(lang === 'en'){
+    headline.fontFamily = 'Inter';
+  }
+
+  document.getElementById('fontFamily').value = headline.fontFamily;
+
+  canvas.renderAll();
+
+});
+
+// ===== IMAGE UPLOAD =====
+document.getElementById('bgUpload').addEventListener('change', function(e){
+
+  const reader = new FileReader();
+
+  reader.onload = function(f){
+
+    fabric.Image.fromURL(f.target.result, function(img){
+
+      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+        scaleX: canvas.width / img.width,
+        scaleY: canvas.height / img.height
+      });
+
+    });
+
+  }
+
+  reader.readAsDataURL(e.target.files[0]);
+
+});
+
+// ===== EXPORT =====
+function exportPNG(){
+
+  const link = document.createElement('a');
+  link.download = 'tebmed-cover.png';
+  link.href = canvas.toDataURL({
+    format: 'png',
+    quality: 1
+  });
+
+  link.click();
+
+}
+
+function exportJPG(){
+
+  const link = document.createElement('a');
+  link.download = 'tebmed-cover.jpg';
+  link.href = canvas.toDataURL({
+    format: 'jpeg',
+    quality: 1
+  });
+
+  link.click();
+
+}
+
+// ===== ZOOM =====
+canvas.on('mouse:wheel', function(opt) {
+
+  const delta = opt.e.deltaY;
+  let zoom = canvas.getZoom();
+
+  zoom *= 0.999 ** delta;
+
+  if (zoom > 3) zoom = 3;
+  if (zoom < 0.5) zoom = 0.5;
+
+  canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+
+  opt.e.preventDefault();
+  opt.e.stopPropagation();
+
+});
+
+// ===== MOBILE RESPONSIVE =====
+function resizeCanvas(){
+
+  const wrapper = document.querySelector('#canvas-wrapper > div');
+
+  if(window.innerWidth < 768){
+    wrapper.style.width = '92vw';
+  } else {
+    wrapper.style.width = '540px';
+  }
+
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+</script></body>
 </html>
