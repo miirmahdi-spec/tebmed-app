@@ -243,6 +243,7 @@
 const canvas = new fabric.Canvas('editorCanvas', {
   width: 1080,
   height: 1350,
+  backgroundColor: '#111827',
   preserveObjectStacking: true,
   selection: true
 });
@@ -254,21 +255,26 @@ function fitCanvasToScreen(){
 
   const container = document.getElementById('canvas-container');
 
-  const maxWidth = window.innerWidth < 768
-    ? window.innerWidth * 0.88
-    : 540;
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight - 140;
 
-  const scale = maxWidth / 1080;
+  const designWidth = 1080;
+  const designHeight = 1350;
+
+  const scaleX = viewportWidth * 0.88 / designWidth;
+  const scaleY = viewportHeight * 0.88 / designHeight;
+
+  const scale = Math.min(scaleX, scaleY);
+
+  canvas.setDimensions({
+    width: designWidth * scale,
+    height: designHeight * scale
+  });
 
   canvas.setZoom(scale);
 
-  canvas.setDimensions({
-    width: 1080 * scale,
-    height: 1350 * scale
-  });
-
-  container.style.width = `${1080 * scale}px`;
-  container.style.height = `${1350 * scale}px`;
+  container.style.width = `${designWidth * scale}px`;
+  container.style.height = `${designHeight * scale}px`;
 
   canvas.renderAll();
 
@@ -282,39 +288,42 @@ const bgRect = new fabric.Rect({
   top: 0,
   width: 1080,
   height: 1350,
-  fill: '#111827',
-  selectable: false
+  fill: '#0f172a',
+  selectable: false,
+  evented: false
 });
 
 canvas.add(bgRect);
+canvas.sendToBack(bgRect);
 
 // ===== GLASS CARD =====
 const glassCard = new fabric.Rect({
   left: 80,
-  top: 140,
+  top: 120,
   width: 920,
-  height: 1050,
+  height: 1100,
   rx: 40,
   ry: 40,
-  fill: 'rgba(255,255,255,0.06)',
-  stroke: 'rgba(255,255,255,0.08)',
+  fill: 'rgba(255,255,255,0.08)',
+  stroke: 'rgba(255,255,255,0.12)',
   strokeWidth: 1,
-  selectable: false
+  selectable: false,
+  evented: false
 });
 
 canvas.add(glassCard);
 
 // ===== HEADLINE =====
 const headline = new fabric.Textbox('مراقبت پزشکی در سطح جهانی', {
-  left: 130,
-  top: 260,
-  width: 820,
-  fontSize: 64,
+  left: 140,
+  top: 280,
+  width: 780,
+  fontSize: 68,
   fill: '#ffffff',
   fontFamily: 'Vazirmatn',
   textAlign: 'center',
   editable: true,
-  lineHeight: 1.3,
+  lineHeight: 1.4,
   fontWeight: '700'
 });
 
@@ -323,9 +332,9 @@ canvas.setActiveObject(headline);
 
 // ===== SUBTITLE =====
 const subtitle = new fabric.Textbox('Hair Transplant • Dental • IVF • Cosmetic Surgery', {
-  left: 180,
+  left: 170,
   top: 470,
-  width: 720,
+  width: 740,
   fontSize: 32,
   fill: '#4af6d2',
   fontFamily: 'Inter',
@@ -336,19 +345,20 @@ canvas.add(subtitle);
 
 // ===== CTA =====
 const cta = new fabric.Rect({
-  left: 360,
+  left: 340,
   top: 980,
-  width: 360,
-  height: 90,
-  rx: 20,
-  ry: 20,
-  fill: '#00b7d1'
+  width: 400,
+  height: 96,
+  rx: 24,
+  ry: 24,
+  fill: '#22d3ee',
+  shadow: '0 0 30px rgba(34,211,238,0.35)'
 });
 
 const ctaText = new fabric.Text('Book Consultation', {
-  left: 430,
-  top: 1010,
-  fill: '#0b1120',
+  left: 395,
+  top: 1012,
+  fill: '#082f49',
   fontSize: 30,
   fontFamily: 'Inter',
   fontWeight: '700'
