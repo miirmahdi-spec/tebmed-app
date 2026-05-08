@@ -255,28 +255,31 @@ function fitCanvasToScreen(){
 
   const container = document.getElementById('canvas-container');
 
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight - 140;
-
   const designWidth = 1080;
   const designHeight = 1350;
 
-  const scaleX = viewportWidth * 0.88 / designWidth;
-  const scaleY = viewportHeight * 0.88 / designHeight;
+  const availableWidth = window.innerWidth < 768
+    ? window.innerWidth * 0.82
+    : 620;
 
-  const scale = Math.min(scaleX, scaleY);
+  const scale = availableWidth / designWidth;
 
-  canvas.setDimensions({
-    width: designWidth * scale,
-    height: designHeight * scale
-  });
+  canvas.setWidth(designWidth * scale);
+  canvas.setHeight(designHeight * scale);
 
-  canvas.setZoom(scale);
+  canvas.setViewportTransform([
+    scale,
+    0,
+    0,
+    scale,
+    0,
+    0
+  ]);
 
   container.style.width = `${designWidth * scale}px`;
   container.style.height = `${designHeight * scale}px`;
 
-  canvas.renderAll();
+  canvas.requestRenderAll();
 
 }
 
