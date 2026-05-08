@@ -138,10 +138,10 @@
 </aside>
 
 <!-- CANVAS -->
-<main class="flex-1 flex items-center justify-center overflow-auto p-6" id="canvas-wrapper">
+<main class="flex-1 flex items-center justify-center overflow-hidden p-4 md:p-6" id="canvas-wrapper">
 
-  <div class="rounded-[30px] overflow-hidden shadow-2xl border border-white/10 bg-black">
-    <canvas id="editorCanvas" width="1080" height="1350"></canvas>
+  <div id="canvas-container" class="rounded-[30px] overflow-hidden shadow-2xl border border-white/10 bg-black flex items-center justify-center">
+    <canvas id="editorCanvas"></canvas>
   </div>
 
 </main>
@@ -241,11 +241,40 @@
 </div><script>
 
 const canvas = new fabric.Canvas('editorCanvas', {
+  width: 1080,
+  height: 1350,
   preserveObjectStacking: true,
   selection: true
 });
 
 canvas.setBackgroundColor('#111827', canvas.renderAll.bind(canvas));
+
+// ===== RESPONSIVE CANVAS =====
+function fitCanvasToScreen(){
+
+  const container = document.getElementById('canvas-container');
+
+  const maxWidth = window.innerWidth < 768
+    ? window.innerWidth * 0.88
+    : 540;
+
+  const scale = maxWidth / 1080;
+
+  canvas.setZoom(scale);
+
+  canvas.setDimensions({
+    width: 1080 * scale,
+    height: 1350 * scale
+  });
+
+  container.style.width = `${1080 * scale}px`;
+  container.style.height = `${1350 * scale}px`;
+
+  canvas.renderAll();
+
+}
+
+window.addEventListener('resize', fitCanvasToScreen);
 
 // ===== BACKGROUND =====
 const bgRect = new fabric.Rect({
@@ -327,6 +356,8 @@ const ctaText = new fabric.Text('Book Consultation', {
 
 canvas.add(cta);
 canvas.add(ctaText);
+
+fitCanvasToScreen();
 
 // ===== LIVE CONTROLS =====
 document.getElementById('headline').addEventListener('input', e => {
@@ -451,6 +482,89 @@ canvas.on('mouse:wheel', function(opt) {
 
 });
 
+// ===== REAL SIDEBAR ACTIONS =====
+
+function addRectangle(){
+
+  const rect = new fabric.Rect({
+    left: 240,
+    top: 720,
+    width: 240,
+    height: 140,
+    fill: 'rgba(0,183,209,0.18)',
+    rx: 22,
+    ry: 22,
+    stroke: '#4af6d2',
+    strokeWidth: 2
+  });
+
+  canvas.add(rect);
+  canvas.setActiveObject(rect);
+  canvas.renderAll();
+
+}
+
+function addCircle(){
+
+  const circle = new fabric.Circle({
+    radius: 80,
+    fill: 'rgba(255,255,255,0.12)',
+    left: 380,
+    top: 760,
+    stroke: '#4af6d2',
+    strokeWidth: 2
+  });
+
+  canvas.add(circle);
+  canvas.setActiveObject(circle);
+  canvas.renderAll();
+
+}
+
+function applyGlow(){
+
+  const active = canvas.getActiveObject();
+
+  if(active){
+
+    active.set({
+      shadow: '0 0 30px rgba(74,246,210,0.7)'
+    });
+
+    canvas.renderAll();
+
+  }
+
+}
+
+function translateHeadline(){
+
+  const lang = document.getElementById('language').value;
+
+  if(lang === 'fa'){
+    headline.text = document.getElementById('headline').value;
+    headline.fontFamily = 'Vazirmatn';
+  }
+
+  if(lang === 'en'){
+    headline.text = document.getElementById('transEn').value;
+    headline.fontFamily = 'Inter';
+  }
+
+  if(lang === 'ar'){
+    headline.text = document.getElementById('transAr').value;
+    headline.fontFamily = 'Cairo';
+  }
+
+  if(lang === 'bn'){
+    headline.text = document.getElementById('transBn').value;
+    headline.fontFamily = 'Hind Siliguri';
+  }
+
+  canvas.renderAll();
+
+}
+
 // ===== SIDEBAR INTERACTIONS =====
 const tabButtons = document.querySelectorAll('.tab-btn');
 
@@ -481,159 +595,19 @@ sidebarButtons.forEach((btn, index) => {
     }
 
     if(index === 2){
-
-      const rect = new fabric.Rect({
-        left: 250,
-        top: 700,
-        width: 220,
-        height: 120,
-        fill: 'rgba(0,183,209,0.25)',
-        rx: 18,
-        ry: 18,
-        stroke: '#4af6d2',
-        strokeWidth: 1
-      });
-
-      canvas.add(rect);
-      canvas.setActiveObject(rect);
-      canvas.renderAll();
-
+      addCircle();
     }
 
     if(index === 3){
-
-      headline.set({
-        shadow: '0 0 30px rgba(74,246,210,0.6)'
-      });
-
-      canvas.renderAll();
-
-    }
-
-  });
-
-});
-
-// ===== MOBILE MENU =====
-const mobileButtons = document.querySelectorAll('#mobile-bottom-bar button');
-
-mobileButtons.forEach((btn,index) => {
-
-  btn.addEventListener('click', () => {
-
-    mobileButtons.forEach(b => {
-      b.style.color = 'white';
-    });
-
-    btn.style.color = '#4af6d2';
-
-    if(index === 0){
-      document.getElementById('headline').focus();
-    }
-
-    if(index === 1){
-      document.getElementById('bgUpload').click();
-    }
-
-    if(index === 2){
-
-      const circle = new fabric.Circle({
-        radius: 70,
-        fill: 'rgba(255,255,255,0.12)',
-        left: 400,
-        top: 760,
-        stroke: '#4af6d2',
-        strokeWidth: 1
-      });
-
-      canvas.add(circle);
-      canvas.setActiveObject(circle);
-      canvas.renderAll();
-
-    }
-
-    if(index === 3){
-
-      const lang = document.getElementById('language');
-
-      if(lang.value === 'fa'){
-        headline.text = document.getElementById('headline').value;
-      }
-
-      if(lang.value === 'en'){
-        headline.text = document.getElementById('transEn').value;
-      }
-
-      if(lang.value === 'ar'){
-        headline.text = document.getElementById('transAr').value;
-      }
-
-      if(lang.value === 'bn'){
-        headline.text = document.getElementById('transBn').value;
-      }
-
-      canvas.renderAll();
-
-    }
-
-    if(index === 4){
-      exportPNG();
-    }
-
-  });
-
-});
-
-// ===== OBJECT SELECTION =====
-canvas.on('selection:created', updatePanel);
-canvas.on('selection:updated', updatePanel);
-
-function updatePanel(){
-
-  const active = canvas.getActiveObject();
-
-  if(!active) return;
-
-  if(active.type === 'textbox'){
-
-    document.getElementById('fontSize').value = active.fontSize || 64;
-    document.getElementById('fontFamily').value = active.fontFamily || 'Vazirmatn';
-
-  }
-
-}
-
-// ===== DELETE KEY =====
-document.addEventListener('keydown', e => {
-
-  if(e.key === 'Delete'){
-
-    const active = canvas.getActiveObject();
-
-    if(active){
-      canvas.remove(active);
-      canvas.renderAll();
+      translateHeadline();
     }
 
   }
 
 });
 
-// ===== MOBILE RESPONSIVE =====
-function resizeCanvas(){
-
-  const wrapper = document.querySelector('#canvas-wrapper > div');
-
-  if(window.innerWidth < 768){
-    wrapper.style.width = '92vw';
-  } else {
-    wrapper.style.width = '540px';
-  }
-
-}
-
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
+// ===== FIXED MOBILE RESPONSIVE =====
+fitCanvasToScreen();
 
 </script></body>
 </html>
