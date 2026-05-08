@@ -13,54 +13,72 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&family=Zain:wght@400;700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
-  /* در اینجا تمام استایل‌های حرفه‌ای فایل Tabbed UI شما قرار گرفته است */
-  :root { --p: #06b6d4; --s: #0f172a; --t: #f8fafc; }
-  body { font-family: 'Vazirmatn', sans-serif; background: var(--s); color: var(--t); margin: 0; overflow-x: hidden; }
-  
-  /* تب‌ها و منوها */
-  .tabs { display: flex; background: #1e293b; padding: 10px; sticky: top; z-index: 100; }
-  .tab-btn { padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-left: 10px; }
-  .tab-btn.active { background: var(--p); color: white; }
-  
-  /* استایل ویرایشگر تصویر شما */
-  canvas { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-  
-  /* کدهای استایل شما در اینجا ادامه دارد... */
+    /* این بخش را با استایل‌های کامل فایل tebmed_dashboard_tabbed_ui جایگزین کردم */
+    :root { --p: #06b6d4; --s: #0f172a; --t: #f8fafc; --bg-glass: rgba(30, 41, 59, 0.7); }
+    body { font-family: 'Vazirmatn', sans-serif; background: var(--s); color: var(--t); margin: 0; padding-bottom: 80px; }
+    
+    .nav-tabs { display: flex; justify-content: space-around; background: var(--bg-glass); backdrop-filter: blur(10px); position: fixed; bottom: 0; width: 100%; border-top: 1px solid #334155; padding: 10px 0; z-index: 1000; }
+    .tab-item { cursor: pointer; text-align: center; color: #94a3b8; font-size: 0.8rem; transition: 0.3s; }
+    .tab-item.active { color: var(--p); }
+    .tab-item i { font-size: 1.5rem; display: block; margin-bottom: 5px; }
+
+    .content-section { display: none; padding: 20px; animation: fadeIn 0.5s; }
+    .content-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* استایل‌های ویرایشگر تصویر شما */
+    .editor-container { background: #1e293b; border-radius: 15px; padding: 20px; margin-top: 20px; }
+    canvas { width: 100%; border-radius: 10px; background: #000; }
+    .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
 </style>
 </head>
 <body>
 
-<div class="tabs">
-  <div class="tab-btn active" onclick="showTab('ideation')">ایده‌پردازی</div>
-  <div class="tab-btn" onclick="showTab('planner')">تقویم محتوایی</div>
-  <div class="tab-btn" onclick="showTab('designer')">طراحی بنر</div>
+<div id="ideation" class="content-section active">
+    <h2><i class="fas fa-lightbulb"></i> ایده‌پردازی محتوا</h2>
+    <p>در این بخش می‌توانید ایده‌های جدید برای مدیکال توریسم ثبت کنید.</p>
+    </div>
+
+<div id="designer" class="content-section">
+    <h2><i class="fas fa-paint-brush"></i> طراحی بنر هوشمند</h2>
+    <div class="editor-container">
+        <canvas id="mainCanvas"></canvas>
+        <div class="controls-grid">
+            <input type="file" id="uploadImg" hidden>
+            <button class="btn" onclick="document.getElementById('uploadImg').click()"><i class="fas fa-image"></i> آپلود عکس</button>
+            <button class="btn" onclick="addLogo()"><i class="fas fa-plus"></i> افزودن لوگو</button>
+        </div>
+    </div>
 </div>
 
-<div id="ideation" class="content-section">
-  </div>
+<div id="planner" class="content-section">
+    <h2><i class="fas fa-calendar-alt"></i> تقویم محتوایی</h2>
+    </div>
 
-<div id="designer" class="content-section" style="display:none;">
-  </div>
-
-<script>
-  function showTab(id) {
-    document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-  }
-  
-  // کدهای Canvas و پردازش تصویر شما در اینجا قرار دارد...
-</script>
+<div class="nav-tabs">
+    <div class="tab-item active" onclick="switchTab('ideation', this)"><i class="fas fa-brain"></i>ایده‌ها</div>
+    <div class="tab-item" onclick="switchTab('designer', this)"><i class="fas fa-magic"></i>طراحی</div>
+    <div class="tab-item" onclick="switchTab('planner', this)"><i class="fas fa-tasks"></i>تقویم</div>
+</div>
 
 <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').then(reg => {
-      console.log('TebMed PWA Active');
-    });
-  });
-}
+    // اسکریپت سوئیچ کردن بین تب‌ها
+    function switchTab(tabId, el) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        el.classList.add('active');
+    }
+
+    // ثبت سرویس ورکر برای PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js').then(() => console.log("PWA فعال شد"));
+        });
+    }
 </script>
 
 </body>
