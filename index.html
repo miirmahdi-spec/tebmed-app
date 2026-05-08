@@ -1,142 +1,198 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TebMed Command Center v2</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#00B7D1">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TebMed Command Center | Pro Edition</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1120">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Vazirmatn:wght@400;700&family=Zain:wght@400;700&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    :root { --accent: #4AF6D2; --primary: #00B7D1; }
+    body { 
+        background-color: #0B1120; 
+        background-image: radial-gradient(ellipse at 20% 30%, rgba(0,183,209,0.1) 0%, transparent 50%);
+        color: #e2e8f0; font-family: 'Inter', 'Vazirmatn', sans-serif; margin: 0;
+    }
+    .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
+    .accent-text { background: linear-gradient(135deg, #4AF6D2 0%, #00B7D1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
-    <style>
-        body { background: #0F172A; color: #E2E8F0; font-family: 'Vazirmatn', sans-serif; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .accent-border { border-right: 4px solid #00B7D1; }
-        canvas { border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; height: auto; }
-        .control-panel { max-height: 85vh; overflow-y: auto; padding-right: 10px; }
-    </style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+    .control-card { transition: all 0.3s ease; }
+    .control-card:hover { border-color: var(--accent); }
+    
+    input, textarea, select { 
+        background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); 
+        color: #fff; border-radius: 12px; padding: 10px; width: 100%; font-size: 13px;
+    }
+    .btn-pro { background: linear-gradient(135deg, #00B7D1, #4AF6D2); color: #0F172A; font-weight: 700; padding: 10px 20px; border-radius: 12px; transition: 0.3s; }
+    .btn-pro:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,183,209,0.4); }
+</style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 lg:p-6">
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <div class="lg:col-span-4 space-y-6 control-panel">
-            <div class="glass p-5 rounded-2xl">
-                <h2 class="text-[#00B7D1] font-bold mb-4 flex items-center gap-2">
-                    <span>🌐</span> مدیریت ترجمه و متن
-                </h2>
-                <div class="space-y-4">
-                    <div>
-                        <label class="text-xs text-slate-400">متن اصلی (فارسی)</label>
-                        <textarea id="masterText" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm mt-1" rows="2" oninput="updateCanvas()">مراقبت پزشکی در سطح جهانی</textarea>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="autoTranslate()" class="text-xs bg-[#00B7D1] text-slate-900 font-bold px-3 py-2 rounded-md w-full">ترجمه هوشمند (بنگالی/عربی)</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass p-5 rounded-2xl">
-                <h2 class="text-[#00B7D1] font-bold mb-4">🎨 ابزارهای ادیت حرفه‌ای</h2>
-                <div class="grid grid-cols-2 gap-3 text-xs">
-                    <button onclick="applyFilter('grayscale(100%)')" class="bg-slate-800 p-2 rounded-md border border-slate-700">سیاه و سفید</button>
-                    <button onclick="applyFilter('sepia(50%)')" class="bg-slate-800 p-2 rounded-md border border-slate-700">تم گرم</button>
-                    <button onclick="applyFilter('brightness(120%)')" class="bg-slate-800 p-2 rounded-md border border-slate-700">افزایش نور</button>
-                    <button onclick="applyFilter('none')" class="bg-red-900/30 p-2 rounded-md border border-red-800">حذف فیلتر</button>
-                </div>
-                <div class="mt-4">
-                    <input type="file" id="imageUpload" class="hidden" onchange="handleImage(event)">
-                    <button onclick="document.getElementById('imageUpload').click()" class="w-full border-2 border-dashed border-slate-600 p-4 rounded-xl hover:border-[#00B7D1] transition-all text-slate-400 text-sm">
-                        + آپلود تصویر پس‌زمینه
-                    </button>
-                </div>
-            </div>
+<header class="flex justify-between items-center max-w-[1400px] mx-auto mb-8">
+    <div class="flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00B7D1] to-[#4AF6D2] flex items-center justify-center">
+            <i class="fas fa-plus text-slate-900 font-bold"></i>
         </div>
-
-        <div class="lg:col-span-8 space-y-6">
-            <div class="glass p-6 rounded-3xl relative overflow-hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold">پیش‌نمایش زنده (Live Preview)</h3>
-                    <button onclick="downloadImage()" class="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-sm shadow-xl hover:scale-105 transition-transform">خروجی نهایی</button>
-                </div>
-                <div class="flex justify-center bg-black/40 rounded-2xl p-4">
-                    <canvas id="mainCanvas" width="1080" height="1350" class="max-w-[400px]"></canvas>
-                </div>
-            </div>
+        <div>
+            <h1 class="text-xl font-bold tracking-tight">TebMed<span class="accent-text">Tourism</span></h1>
+            <p class="text-[9px] text-slate-500 uppercase tracking-widest">Command Center Pro</p>
         </div>
     </div>
+    <button onclick="downloadAll()" class="btn-pro text-xs">Export Designs</button>
+</header>
 
-    <script>
-        const canvas = document.getElementById('mainCanvas');
-        const ctx = canvas.getContext('2d');
-        let activeImage = null;
-        let currentFilter = 'none';
+<main class="max-w-[1400px] mx-auto grid grid-cols-1 xl:grid-cols-12 gap-6">
+    
+    <aside class="xl:col-span-3 space-y-5 overflow-y-auto max-h-[85vh] pr-2">
+        
+        <div class="glass p-5 control-card">
+            <h3 class="text-xs font-bold text-[#4AF6D2] uppercase tracking-wider mb-4">Background & Canvas</h3>
+            <div class="space-y-4">
+                <button onclick="document.getElementById('bgInput').click()" class="w-full py-8 border-2 border-dashed border-white/10 rounded-2xl hover:border-[#00B7D1] transition-all text-slate-500 text-xs">
+                    <i class="fas fa-cloud-upload-alt text-lg mb-2 block"></i> Upload Image
+                </button>
+                <input type="file" id="bgInput" class="hidden" onchange="handleImage(event)">
+                
+                <div>
+                    <label class="text-[11px] text-slate-400 mb-2 block">Overlay Opacity</label>
+                    <input type="range" id="overlayRange" min="0" max="90" value="30" oninput="updateCanvas()">
+                </div>
+            </div>
+        </div>
 
-        function handleImage(e) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = new Image();
-                img.onload = function() {
-                    activeImage = img;
-                    updateCanvas();
-                }
-                img.src = event.target.result;
-            }
-            reader.readAsDataURL(e.target.files[0]);
-        }
+        <div class="glass p-5 control-card">
+            <h3 class="text-xs font-bold text-[#4AF6D2] uppercase tracking-wider mb-4">Smart Translation</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[11px] text-slate-400 block mb-1">Persian (Master)</label>
+                    <textarea id="textFa" rows="2" dir="rtl" oninput="updateCanvas()">مراقبت پزشکی در سطح جهانی</textarea>
+                </div>
+                <div>
+                    <label class="text-[11px] text-slate-400 block mb-1">Bengali</label>
+                    <textarea id="textBn" rows="2" oninput="updateCanvas()" placeholder="বাংলা অনুবাদ..."></textarea>
+                </div>
+                <button onclick="mockTranslate()" class="w-full py-2 bg-white/5 border border-white/10 rounded-lg text-[11px] hover:bg-white/10">
+                    <i class="fas fa-language mr-1"></i> Auto-Translate All
+                </button>
+            </div>
+        </div>
 
-        function applyFilter(filter) {
-            currentFilter = filter;
-            updateCanvas();
-        }
+        <div class="glass p-5 control-card">
+            <h3 class="text-xs font-bold text-[#4AF6D2] uppercase tracking-wider mb-4">Image Filters</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="setFilter('grayscale(100%)')" class="py-2 bg-slate-800 rounded-lg text-[10px]">B&W</button>
+                <button onclick="setFilter('sepia(60%)')" class="py-2 bg-slate-800 rounded-lg text-[10px]">Warm</button>
+                <button onclick="setFilter('contrast(130%)')" class="py-2 bg-slate-800 rounded-lg text-[10px]">Contrast</button>
+                <button onclick="setFilter('none')" class="py-2 bg-red-900/20 rounded-lg text-[10px]">Reset</button>
+            </div>
+        </div>
+    </aside>
 
-        function updateCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    <section class="xl:col-span-9">
+        <div class="glass p-6 min-h-[70vh] flex flex-col items-center justify-center relative">
+            <div class="absolute top-6 left-6 flex gap-4">
+                <div class="px-4 py-2 bg-white/5 rounded-full border border-white/10 text-[11px]">
+                    <span class="text-[#4AF6D2]">●</span> Live Preview
+                </div>
+            </div>
+
+            <div class="bg-black shadow-2xl rounded-3xl overflow-hidden border-[8px] border-[#1e293b]">
+                <canvas id="mainCanvas" width="1080" height="1350" style="max-width: 450px; width: 100%; height: auto;"></canvas>
+            </div>
             
-            // رسم تصویر با فیلتر
-            if (activeImage) {
-                ctx.filter = currentFilter;
-                ctx.drawImage(activeImage, 0, 0, canvas.width, canvas.height);
-                ctx.filter = 'none';
-            } else {
-                ctx.fillStyle = '#1E293B';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-            }
+            <p class="mt-6 text-slate-500 text-[11px]">Resolution: 1080x1350 (Vertical Optimized)</p>
+        </div>
+    </section>
+</main>
 
-            // لایه تیره برای خوانایی متن
-            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+<script>
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    let userImg = null;
+    let currentFilter = 'none';
+
+    function handleImage(e) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = new Image();
+            img.onload = () => { userImg = img; updateCanvas(); };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    }
+
+    function setFilter(f) { currentFilter = f; updateCanvas(); }
+
+    function updateCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Background
+        if (userImg) {
+            ctx.filter = currentFilter;
+            ctx.drawImage(userImg, 0, 0, canvas.width, canvas.height);
+            ctx.filter = 'none';
+        } else {
+            ctx.fillStyle = '#111827';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // متن فارسی
-            const text = document.getElementById('masterText').value;
-            ctx.fillStyle = 'white';
-            ctx.font = 'bold 60px Vazirmatn';
-            ctx.textAlign = 'center';
-            ctx.fillText(text, canvas.width/2, canvas.height/2);
-            
-            // لوگو فرضی TebMed
-            ctx.fillStyle = '#00B7D1';
-            ctx.font = '30px Vazirmatn';
-            ctx.fillText('TebMedTourism', canvas.width/2, canvas.height - 80);
         }
 
-        function downloadImage() {
-            const link = document.createElement('a');
-            link.download = 'tebmed-post.png';
-            link.href = canvas.toDataURL();
-            link.click();
+        // Overlay
+        const op = document.getElementById('overlayRange').value / 100;
+        ctx.fillStyle = `rgba(11, 17, 32, ${op})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Persian Text
+        const fa = document.getElementById('textFa').value;
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 70px Vazirmatn';
+        ctx.fillText(fa, canvas.width/2, canvas.height/2 - 20);
+
+        // Bengali Text
+        const bn = document.getElementById('textBn').value;
+        if(bn) {
+            ctx.fillStyle = '#4AF6D2';
+            ctx.font = '40px Hind Siliguri';
+            ctx.fillText(bn, canvas.width/2, canvas.height/2 + 60);
         }
 
-        // Service Worker برای PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
-        }
+        // Branding
+        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        ctx.font = '25px Inter';
+        ctx.fillText('TEBMED TOURISM', canvas.width/2, canvas.height - 100);
+    }
 
-        window.onload = updateCanvas;
-    </script>
+    async function mockTranslate() {
+        const text = document.getElementById('textFa').value;
+        document.getElementById('textBn').value = "অপেক্ষা করুন..."; 
+        // در اینجا می‌توانید کد اتصال به API ترجمه را قرار دهید
+        setTimeout(() => {
+            document.getElementById('textBn').value = "বিশ্বমানের চিকিৎসা সেবা";
+            updateCanvas();
+        }, 1000);
+    }
+
+    function downloadAll() {
+        const link = document.createElement('a');
+        link.download = 'tebmed-design.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+
+    window.onload = updateCanvas;
+</script>
+
 </body>
 </html>
