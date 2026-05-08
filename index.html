@@ -138,9 +138,9 @@
 </aside>
 
 <!-- CANVAS -->
-<main class="flex-1 flex items-center justify-center overflow-hidden p-4 md:p-6" id="canvas-wrapper">
+<main class="flex-1 flex items-center justify-center overflow-auto p-4 md:p-6" id="canvas-wrapper">
 
-  <div id="canvas-container" class="rounded-[30px] overflow-hidden shadow-2xl border border-white/10 bg-black flex items-center justify-center">
+  <div id="canvas-container" class="rounded-[30px] overflow-hidden shadow-2xl border border-white/10 bg-black flex items-center justify-center mx-auto">
     <canvas id="editorCanvas"></canvas>
   </div>
 
@@ -253,32 +253,36 @@ canvas.setBackgroundColor('#111827', canvas.renderAll.bind(canvas));
 // ===== RESPONSIVE CANVAS =====
 function fitCanvasToScreen(){
 
-  const container = document.getElementById('canvas-container');
+  const wrapper = document.getElementById('canvas-container');
 
-  const designWidth = 1080;
-  const designHeight = 1350;
+  // Stable fixed scaling for Fabric.js mobile rendering
+  const isMobile = window.innerWidth < 768;
 
-  const availableWidth = window.innerWidth < 768
-    ? window.innerWidth * 0.82
-    : 620;
+  const scale = isMobile ? 0.28 : 0.5;
 
-  const scale = availableWidth / designWidth;
+  const renderWidth = 1080 * scale;
+  const renderHeight = 1350 * scale;
 
-  canvas.setWidth(designWidth * scale);
-  canvas.setHeight(designHeight * scale);
+  wrapper.style.width = renderWidth + 'px';
+  wrapper.style.height = renderHeight + 'px';
 
-  canvas.setViewportTransform([
+  // Keep internal Fabric resolution original
+  canvas.setDimensions({
+    width: renderWidth,
+    height: renderHeight
+  });
+
+  // Use viewportTransform only
+  canvas.viewportTransform = [
     scale,
     0,
     0,
     scale,
     0,
     0
-  ]);
+  ];
 
-  container.style.width = `${designWidth * scale}px`;
-  container.style.height = `${designHeight * scale}px`;
-
+  canvas.calcOffset();
   canvas.requestRenderAll();
 
 }
@@ -478,22 +482,7 @@ function exportJPG(){
 }
 
 // ===== ZOOM =====
-canvas.on('mouse:wheel', function(opt) {
-
-  const delta = opt.e.deltaY;
-  let zoom = canvas.getZoom();
-
-  zoom *= 0.999 ** delta;
-
-  if (zoom > 3) zoom = 3;
-  if (zoom < 0.5) zoom = 0.5;
-
-  canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-
-  opt.e.preventDefault();
-  opt.e.stopPropagation();
-
-});
+// Wheel zoom removed for mobile stability
 
 // ===== REAL SIDEBAR ACTIONS =====
 
