@@ -1,615 +1,906 @@
-<!DOCTYPE html><html lang="fa" dir="rtl">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TebMed Social Studio</title>  <!-- Tailwind -->  <script src="https://cdn.tailwindcss.com"></script>  <!-- Fabric.js -->  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>  <!-- Fonts -->  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;600;700&family=Vazirmatn:wght@400;500;700&family=Lalezar&family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TebMedTourism — Social Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;600;700&family=Vazirmatn:wght@400;500;700&family=Lalezar&family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+<style>
+:root{
+  --T:#00B7D1;--C:#4AF6D2;
+  --bg:#070C18;--brd:rgba(255,255,255,0.07);
+  --muted:rgba(255,255,255,0.45);--dim:rgba(255,255,255,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif;display:flex;flex-direction:column;}
 
-    body {
-      margin: 0;
-      background: #0b1120;
-      color: white;
-      font-family: Vazirmatn, sans-serif;
-      overflow: hidden;
-    }
+/* HEADER */
+.hdr{height:54px;background:rgba(7,12,24,.98);border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0;gap:8px;}
+.hdr-logo{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.hdr-icon{width:32px;height:32px;background:linear-gradient(135deg,#4AF6D2,#00B7D1);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:13px;color:#0F172A;box-shadow:0 0 14px rgba(0,183,209,.45);}
+.hdr-title{font-size:13px;font-weight:700;}.hdr-title span{color:var(--T);}
+.hdr-sub{font-size:9px;color:var(--dim);letter-spacing:.04em;}
+.hdr-fmts{display:flex;gap:4px;}
+.fmt-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:7px;color:rgba(255,255,255,.5);padding:5px 10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:1px;}
+.fmt-btn .fsz{font-size:8px;opacity:.5;}
+.fmt-btn.active{background:rgba(0,183,209,.18);border-color:rgba(0,183,209,.5);color:#fff;}
+.fmt-btn:hover:not(.active){background:rgba(255,255,255,.08);color:#ddd;}
+.hdr-actions{display:flex;gap:5px;flex-shrink:0;}
+.xbtn{background:linear-gradient(90deg,var(--T),var(--C));border:none;border-radius:7px;color:#0F172A;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;padding:7px 13px;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;gap:4px;}
+.xbtn:hover{opacity:.88;}.xbtn:disabled{opacity:.5;cursor:wait;}
+.xbtn.jpg{background:linear-gradient(90deg,#7C3AED,#A78BFA);}
 
-    .glass {
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(18px);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
+/* LAYOUT */
+.main{flex:1;display:flex;overflow:hidden;}
 
-    .sidebar-btn {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.03);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+/* LEFT TOOLBAR */
+.lbar{width:52px;min-width:52px;background:var(--bg);border-right:1px solid var(--brd);display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 0;overflow-y:auto;}
+.lbar::-webkit-scrollbar{display:none;}
+.tbtn{width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:15px;flex-shrink:0;position:relative;}
+.tbtn:hover{background:rgba(0,183,209,.2);border-color:rgba(74,246,210,.35);}
+.tbtn-tip{position:absolute;left:46px;background:rgba(15,23,42,.97);border:1px solid var(--brd);border-radius:6px;padding:3px 8px;font-size:10px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:99;}
+.tbtn:hover .tbtn-tip{opacity:1;}
+.lsep{width:26px;height:1px;background:var(--brd);margin:2px 0;flex-shrink:0;}
 
-    .sidebar-btn:hover {
-      background: rgba(0,183,209,0.18);
-      border-color: rgba(74,246,210,0.3);
-    }
+/* CANVAS */
+.canvas-area{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;
+  background:
+    radial-gradient(ellipse at 65% 20%,rgba(0,183,209,.06) 0%,transparent 55%),
+    radial-gradient(ellipse at 20% 80%,rgba(74,246,210,.04) 0%,transparent 45%),
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.016) 39px,rgba(255,255,255,.016) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.016) 39px,rgba(255,255,255,.016) 40px);}
+#canvas-container{border-radius:14px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06);}
+.zoom-ind{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.9);border:1px solid var(--brd);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--muted);pointer-events:none;transition:opacity .3s;opacity:0;}
+.zoom-ind.show{opacity:1;}
 
-    .panel-input,
-    .panel-select,
-    .panel-textarea {
-      width: 100%;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.25);
-      color: white;
-      padding: 10px 12px;
-      outline: none;
-      font-size: 13px;
-    }
+/* RIGHT PANEL */
+.panel{width:300px;min-width:300px;background:var(--bg);border-left:1px solid var(--brd);display:flex;flex-direction:column;overflow:hidden;}
+.panel-tabs{display:flex;border-bottom:1px solid var(--brd);flex-shrink:0;}
+.ptab{flex:1;padding:9px 3px;text-align:center;font-size:11px;font-weight:500;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;transition:.18s;}
+.ptab.active{color:var(--C);border-bottom-color:var(--C);}
+.ptab:hover:not(.active){color:rgba(255,255,255,.6);}
+.panel-body{flex:1;overflow-y:auto;padding:12px;}
+.panel-body::-webkit-scrollbar{width:3px;}
+.panel-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px;}
+.psec{display:none;}.psec.active{display:block;}
 
-    .panel-input:focus,
-    .panel-select:focus,
-    .panel-textarea:focus {
-      border-color: #00b7d1;
-    }
+/* FORM */
+.pane{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:11px;margin-bottom:10px;}
+.pane-ttl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--T);margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.pane-ttl::before{content:'';width:3px;height:10px;background:linear-gradient(to bottom,var(--C),var(--T));border-radius:2px;flex-shrink:0;}
+.fg{margin-bottom:8px;}.fg:last-child{margin-bottom:0;}
+.fg label{display:block;font-size:11px;color:var(--muted);margin-bottom:3px;font-weight:500;}
+.fg input[type=text],.fg textarea,.fg select{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.09);border-radius:7px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;padding:7px 8px;resize:vertical;outline:none;transition:border-color .2s;line-height:1.5;}
+.fg input[type=text]:focus,.fg textarea:focus,.fg select:focus{border-color:rgba(0,183,209,.55);}
+.fg select option{background:#111;}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.fg input[type=range]{width:100%;accent-color:var(--T);margin-top:2px;}
+.fg input[type=color]{width:100%;height:38px;border-radius:7px;border:1px solid rgba(255,255,255,.09);background:rgba(0,0,0,.3);cursor:pointer;padding:3px;}
+.apply-btn{width:100%;background:rgba(0,183,209,.15);border:1px solid rgba(0,183,209,.3);border-radius:7px;color:var(--C);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:8px;cursor:pointer;transition:.18s;margin-top:4px;}
+.apply-btn:hover{background:rgba(0,183,209,.25);}
+.sbtn{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:7px;color:rgba(255,255,255,.7);font-family:'Inter',sans-serif;font-size:11px;font-weight:500;padding:8px 6px;cursor:pointer;transition:.18s;text-align:center;}
+.sbtn:hover{background:rgba(0,183,209,.18);border-color:rgba(0,183,209,.35);color:#fff;}
+.dbtn{width:100%;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:7px;color:#f87171;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:8px;cursor:pointer;transition:.18s;}
+.dbtn:hover{background:rgba(239,68,68,.2);}
+.hint{font-size:10px;color:var(--dim);margin-top:6px;line-height:1.6;}
 
-    .toolbar-btn {
-      border-radius: 12px;
-      background: linear-gradient(135deg,#00b7d1,#4af6d2);
-      color: #0b1120;
-      font-weight: 700;
-      border: none;
-      padding: 10px 14px;
-      cursor: pointer;
-    }
+/* Translation UI */
+.tr-box{position:relative;margin-bottom:8px;}
+.tr-box textarea{padding-right:28px;}
+.tr-flag{position:absolute;top:8px;right:8px;font-size:14px;pointer-events:none;line-height:1;}
+.tr-loading-row{display:none;align-items:center;gap:7px;font-size:11px;color:var(--C);padding:6px 0;margin-bottom:4px;}
+.tr-loading-row.show{display:flex;}
+.tr-spinner{width:12px;height:12px;border:2px solid rgba(74,246,210,.3);border-top-color:var(--C);border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0;}
+.tr-result-ok{font-size:10px;color:rgba(74,246,210,.7);margin-top:3px;display:none;}
+.tr-result-ok.show{display:block;}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    #canvas-wrapper {
-      background:
-      radial-gradient(circle at top left, rgba(0,183,209,0.15), transparent 30%),
-      radial-gradient(circle at bottom right, rgba(74,246,210,0.12), transparent 30%),
-      #111827;
-    }
+/* Image upload */
+.upzone{border:1.5px dashed rgba(0,183,209,.35);border-radius:9px;padding:16px 10px;text-align:center;cursor:pointer;transition:.2s;background:rgba(0,183,209,.03);}
+.upzone:hover{border-color:var(--T);background:rgba(0,183,209,.07);}
+.upzone-ico{font-size:22px;margin-bottom:4px;}
+.upzone-lbl{font-size:12px;font-weight:500;color:rgba(255,255,255,.55);}
+.upzone-hint{font-size:10px;color:var(--dim);margin-top:2px;}
+#thumb-preview{width:100%;height:70px;object-fit:contain;border-radius:6px;margin-top:8px;display:none;background:rgba(255,255,255,.04);}
 
-    .property-title {
-      font-size: 11px;
-      color: #94a3b8;
-      margin-bottom: 6px;
-    }
+/* Export overlay */
+.export-overlay{display:none;position:fixed;inset:0;background:rgba(7,12,24,.85);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+.export-overlay.show{display:flex;}
+.export-spinner{width:44px;height:44px;border:3px solid rgba(0,183,209,.2);border-top-color:var(--T);border-radius:50%;animation:spin .7s linear infinite;}
+.export-msg{font-size:14px;color:rgba(255,255,255,.7);}
 
-    .tab-btn {
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      cursor: pointer;
-      font-size: 12px;
-    }
+/* Mobile */
+.mbar{display:none;height:50px;background:rgba(7,12,24,.98);border-top:1px solid var(--brd);align-items:center;justify-content:space-around;padding:0 6px;flex-shrink:0;}
+.mbtn{background:none;border:none;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;font-size:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;}
+.mbtn .mi{font-size:17px;}.mbtn.active{color:var(--C);}
+@media(max-width:1000px){.lbar,.panel{display:none;}.mbar{display:flex;}.hdr-fmts{display:none;}}
+@media(max-width:600px){.hdr-actions .xbtn:nth-child(2){display:none;}}
+</style>
+</head>
+<body>
 
-    .tab-btn.active {
-      background: rgba(0,183,209,0.2);
-      border-color: rgba(74,246,210,0.4);
-      color: #4af6d2;
-    }
-
-    @media(max-width:1024px){
-      .desktop-only {
-        display:none;
-      }
-
-      #mobile-bottom-bar {
-        display:flex;
-      }
-    }
-  </style></head>
-<body><div class="h-screen flex flex-col">  <!-- TOPBAR -->  <header class="glass h-16 flex items-center justify-between px-5 border-b border-white/5"><div class="flex items-center gap-3">
-  <div class="w-10 h-10 rounded-xl bg-cyan-400 flex items-center justify-center text-black font-bold">
-    T
-  </div>
-
-  <div>
-    <div class="font-bold text-lg">TebMed Social Studio</div>
-    <div class="text-[10px] text-slate-400">Medical Tourism Cover Builder</div>
-  </div>
+<div class="export-overlay" id="export-overlay">
+  <div class="export-spinner"></div>
+  <div class="export-msg" id="export-msg">Generating full-resolution image…</div>
 </div>
 
-<div class="flex items-center gap-2">
-  <button class="toolbar-btn" onclick="exportPNG()">PNG خروجی</button>
-  <button class="toolbar-btn" onclick="exportJPG()">JPG خروجی</button>
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-logo">
+    <div class="hdr-icon">+T</div>
+    <div><div class="hdr-title">TebMed<span>Tourism</span></div><div class="hdr-sub">Social Studio</div></div>
+  </div>
+  <div class="hdr-fmts">
+    <button class="fmt-btn active" data-fmt="square"    onclick="setFmt('square',this)">Square<span class="fsz">1080×1080</span></button>
+    <button class="fmt-btn"        data-fmt="vertical"  onclick="setFmt('vertical',this)">Vertical<span class="fsz">1080×1350</span></button>
+    <button class="fmt-btn"        data-fmt="stories"   onclick="setFmt('stories',this)">Stories<span class="fsz">1080×1920</span></button>
+    <button class="fmt-btn"        data-fmt="thumbnail" onclick="setFmt('thumbnail',this)">Thumb<span class="fsz">1280×720</span></button>
+  </div>
+  <div class="hdr-actions">
+    <button class="xbtn" onclick="exportAs('png')">⬇ PNG</button>
+    <button class="xbtn jpg" onclick="exportAs('jpg')">⬇ JPG</button>
+  </div>
+</header>
+
+<div class="main">
+  <!-- LEFT TOOLBAR -->
+  <div class="lbar">
+    <div class="tbtn" onclick="toolAct('text')">✏️<span class="tbtn-tip">Edit Text</span></div>
+    <div class="tbtn" onclick="toolAct('img')">🖼<span class="tbtn-tip">Upload Image</span></div>
+    <div class="lsep"></div>
+    <div class="tbtn" onclick="toolAct('rect')">⬜<span class="tbtn-tip">Add Rectangle</span></div>
+    <div class="tbtn" onclick="toolAct('circle')">⭕<span class="tbtn-tip">Add Circle</span></div>
+    <div class="tbtn" onclick="toolAct('tri')">🔺<span class="tbtn-tip">Add Triangle</span></div>
+    <div class="tbtn" onclick="toolAct('line')">━<span class="tbtn-tip">Add Line</span></div>
+    <div class="lsep"></div>
+    <div class="tbtn" onclick="toolAct('glow')">✨<span class="tbtn-tip">Cyan Glow</span></div>
+    <div class="tbtn" onclick="toolAct('noglow')">🚫<span class="tbtn-tip">Remove Glow</span></div>
+    <div class="tbtn" onclick="toolAct('del')">🗑<span class="tbtn-tip">Delete Selected</span></div>
+    <div class="lsep"></div>
+    <div class="tbtn" onclick="toolAct('back')">↙<span class="tbtn-tip">Send to Back</span></div>
+    <div class="tbtn" onclick="toolAct('front')">↗<span class="tbtn-tip">Bring to Front</span></div>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas-area" id="canvas-area">
+    <div id="canvas-container"><canvas id="c"></canvas></div>
+    <div class="zoom-ind" id="zoom-ind">100%</div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <aside class="panel">
+    <div class="panel-tabs">
+      <div class="ptab active" onclick="showTab(0,this)">Text</div>
+      <div class="ptab" onclick="showTab(1,this)">Language</div>
+      <div class="ptab" onclick="showTab(2,this)">Style</div>
+      <div class="ptab" onclick="showTab(3,this)">Export</div>
+    </div>
+    <div class="panel-body">
+
+      <!-- TAB 0: TEXT -->
+      <div class="psec active" id="tab0">
+        <div class="pane">
+          <div class="pane-ttl">Main Content</div>
+          <div class="fg"><label>Tag / Category</label>
+            <input type="text" id="p-tag" value="Health Tourism" oninput="lu('tag',this.value)"></div>
+          <div class="fg"><label>Headline</label>
+            <textarea id="p-headline" rows="3" oninput="onHeadlineInput(this.value)">World-Class Care, Global Destination</textarea></div>
+          <div class="fg"><label>Subheadline</label>
+            <input type="text" id="p-sub" value="Hair Transplant • Dental • IVF • Cosmetic Surgery" oninput="lu('sub',this.value)"></div>
+          <div class="fg"><label>Body Text</label>
+            <textarea id="p-body" rows="3" oninput="lu('body',this.value)">Connecting patients with top specialists across 12 medical disciplines. Your health journey begins here.</textarea></div>
+          <div class="fg"><label>CTA Button</label>
+            <input type="text" id="p-cta" value="Book Consultation" oninput="lu('cta',this.value)"></div>
+        </div>
+        <div class="pane">
+          <div class="pane-ttl">Statistics</div>
+          <div class="fg-row">
+            <div class="fg"><label>Stat 1 №</label><input type="text" value="500+" oninput="lu('s1n',this.value)"></div>
+            <div class="fg"><label>Label</label><input type="text" value="Specialists" oninput="lu('s1l',this.value)"></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label>Stat 2 №</label><input type="text" value="50+" oninput="lu('s2n',this.value)"></div>
+            <div class="fg"><label>Label</label><input type="text" value="Countries" oninput="lu('s2l',this.value)"></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label>Stat 3 №</label><input type="text" value="10K+" oninput="lu('s3n',this.value)"></div>
+            <div class="fg"><label>Label</label><input type="text" value="Patients" oninput="lu('s3l',this.value)"></div>
+          </div>
+        </div>
+        <div class="pane">
+          <div class="pane-ttl">Brand Info</div>
+          <div class="fg"><label>Brand Name</label>
+            <input type="text" id="p-brand" value="TebMedTourism" oninput="lu('brand',this.value)"></div>
+          <div class="fg"><label>Website URL</label>
+            <input type="text" id="p-url" value="www.tebmedtourism.com" oninput="lu('url',this.value)"></div>
+        </div>
+      </div>
+
+      <!-- TAB 1: LANGUAGE -->
+      <div class="psec" id="tab1">
+        <div class="pane">
+          <div class="pane-ttl">Language & Font</div>
+          <div class="fg"><label>Active Language — applies translation to canvas</label>
+            <select id="p-lang" onchange="changeLang(this.value)">
+              <option value="en">🇬🇧 English</option>
+              <option value="fa">🇮🇷 فارسی (Persian)</option>
+              <option value="ar">🇸🇦 العربية (Arabic)</option>
+              <option value="bn">🇧🇩 বাংলা (Bengali)</option>
+            </select></div>
+          <div class="fg"><label>Override Font</label>
+            <select id="p-font" onchange="lu('font',this.value)">
+              <option value="Playfair Display">Playfair Display</option>
+              <option value="Inter">Inter</option>
+              <option value="Montserrat">Montserrat</option>
+              <option value="Vazirmatn">Vazirmatn</option>
+              <option value="Lalezar">Lalezar</option>
+              <option value="Cairo">Cairo</option>
+              <option value="Tajawal">Tajawal</option>
+              <option value="Hind Siliguri">Hind Siliguri</option>
+            </select></div>
+          <div class="fg">
+            <label>Headline Size — <span id="fs-val">68</span>px</label>
+            <input type="range" id="p-fontsize" min="20" max="120" value="68"
+              oninput="document.getElementById('fs-val').textContent=this.value;lu('fontSize',+this.value)"></div>
+          <div class="fg"><label>Headline Color</label>
+            <input type="color" id="p-color" value="#ffffff" oninput="lu('headlineColor',this.value)"></div>
+        </div>
+
+        <div class="pane">
+          <div class="pane-ttl">Auto Translation ✦</div>
+
+          <!-- Loading indicator -->
+          <div class="tr-loading-row" id="tr-loading">
+            <div class="tr-spinner"></div>
+            <span>Translating…</span>
+          </div>
+          <div class="tr-result-ok" id="tr-ok">✓ Translations updated</div>
+
+          <!-- English source -->
+          <div class="fg">
+            <label>🇬🇧 English — <strong style="color:var(--C)">type here to auto-translate</strong></label>
+            <div class="tr-box">
+              <textarea id="tr-en" rows="2" dir="ltr" placeholder="Type English text here…"
+                oninput="onEnInput(this.value)">World-Class Care, Global Destination</textarea>
+              <span class="tr-flag">🇬🇧</span>
+            </div>
+          </div>
+
+          <!-- Persian -->
+          <div class="fg">
+            <label>🇮🇷 فارسی — Persian <span style="font-size:10px;color:var(--C);">(auto-translated)</span></label>
+            <div class="tr-box">
+              <textarea id="tr-fa" rows="2" dir="rtl" placeholder="ترجمه فارسی اینجا ظاهر می‌شود…"
+                oninput="onManualTr('fa',this.value)"></textarea>
+              <span class="tr-flag">🇮🇷</span>
+            </div>
+          </div>
+
+          <!-- Arabic -->
+          <div class="fg">
+            <label>🇸🇦 العربية — Arabic <span style="font-size:10px;color:var(--C);">(auto-translated)</span></label>
+            <div class="tr-box">
+              <textarea id="tr-ar" rows="2" dir="rtl" placeholder="الترجمة العربية تظهر هنا…"
+                oninput="onManualTr('ar',this.value)"></textarea>
+              <span class="tr-flag">🇸🇦</span>
+            </div>
+          </div>
+
+          <!-- Bengali -->
+          <div class="fg">
+            <label>🇧🇩 বাংলা — Bengali <span style="font-size:10px;color:var(--C);">(auto-translated)</span></label>
+            <div class="tr-box">
+              <textarea id="tr-bn" rows="2" dir="ltr" placeholder="বাংলা অনুবাদ এখানে দেখাবে…"
+                oninput="onManualTr('bn',this.value)"></textarea>
+              <span class="tr-flag">🇧🇩</span>
+            </div>
+          </div>
+
+          <div class="hint">💡 Type or paste English text above. Persian, Arabic & Bengali translations appear automatically. Then switch the Active Language to apply to canvas.</div>
+        </div>
+      </div>
+
+      <!-- TAB 2: STYLE -->
+      <div class="psec" id="tab2">
+        <div class="pane">
+          <div class="pane-ttl">Upload Image</div>
+          <div class="upzone" onclick="document.getElementById('img-file').click()">
+            <div class="upzone-ico">🖼</div>
+            <div class="upzone-lbl">Click to Upload Photo</div>
+            <div class="upzone-hint">Full image shown · not cropped · scales per format</div>
+            <img id="thumb-preview" src="" alt="">
+          </div>
+          <input type="file" id="img-file" accept="image/*" style="display:none" onchange="loadImg(this)">
+          <button class="apply-btn" style="margin-top:6px;" onclick="removeImg()">✕ Remove Image</button>
+        </div>
+        <div class="pane">
+          <div class="pane-ttl">Add Shapes</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px;">
+            <button class="sbtn" onclick="addRect()">⬜ Rectangle</button>
+            <button class="sbtn" onclick="addCircle()">⭕ Circle</button>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="sbtn" onclick="addTri()">🔺 Triangle</button>
+            <button class="sbtn" onclick="addLine()">━ Line</button>
+          </div>
+        </div>
+        <div class="pane">
+          <div class="pane-ttl">Effects — Selected Object</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px;">
+            <button class="sbtn" onclick="applyGlow('#4AF6D2')">✨ Cyan</button>
+            <button class="sbtn" onclick="applyGlow('#00B7D1')">💠 Blue</button>
+            <button class="sbtn" onclick="applyGlow('#ffffff')">⬜ White</button>
+            <button class="sbtn" onclick="applyGlow(null)">🚫 Off</button>
+          </div>
+          <div class="fg"><label>Opacity — <span id="op-val">100</span>%</label>
+            <input type="range" min="5" max="100" value="100"
+              oninput="document.getElementById('op-val').textContent=this.value;setOpacity(+this.value)"></div>
+        </div>
+        <div class="pane">
+          <div class="pane-ttl">Object Actions</div>
+          <div style="display:flex;gap:6px;margin-bottom:7px;">
+            <button class="sbtn" onclick="toolAct('back')">↙ Send Back</button>
+            <button class="sbtn" onclick="toolAct('front')">↗ Bring Front</button>
+          </div>
+          <button class="dbtn" onclick="deleteSel()">🗑 Delete Selected</button>
+          <button class="dbtn" style="margin-top:6px;" onclick="buildScene()">↺ Reset Canvas</button>
+          <div class="hint">💡 Click any object to select. Press Delete key or button above to remove.</div>
+        </div>
+      </div>
+
+      <!-- TAB 3: EXPORT -->
+      <div class="psec" id="tab3">
+        <div class="pane">
+          <div class="pane-ttl">Format</div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <button class="sbtn" onclick="setFmtPanel('square')">◻ Square — 1080 × 1080</button>
+            <button class="sbtn" onclick="setFmtPanel('vertical')">▭ Vertical — 1080 × 1350</button>
+            <button class="sbtn" onclick="setFmtPanel('stories')">▯ Stories — 1080 × 1920</button>
+            <button class="sbtn" onclick="setFmtPanel('thumbnail')">▬ Thumbnail — 1280 × 720</button>
+          </div>
+        </div>
+        <div class="pane">
+          <div class="pane-ttl">Download</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <button class="xbtn" style="width:100%;border-radius:7px;padding:11px;justify-content:center;" onclick="exportAs('png')">⬇ Export as PNG</button>
+            <button class="xbtn jpg" style="width:100%;border-radius:7px;padding:11px;justify-content:center;" onclick="exportAs('jpg')">⬇ Export as JPG</button>
+          </div>
+          <div class="hint">Full-resolution export via Fabric.js native renderer.</div>
+        </div>
+        <div class="pane">
+          <div class="pane-ttl">Navigation Tips</div>
+          <div class="hint">🖱 Mouse wheel — zoom in/out<br>⌨ Delete key — remove selected<br>🖱 Double-click background — reset zoom</div>
+        </div>
+      </div>
+
+    </div><!-- /panel-body -->
+  </aside>
+</div><!-- /main -->
+
+<div class="mbar">
+  <button class="mbtn active" onclick="showTab(0,document.querySelectorAll('.ptab')[0])"><span class="mi">✏️</span>Text</button>
+  <button class="mbtn" onclick="showTab(1,document.querySelectorAll('.ptab')[1])"><span class="mi">🌍</span>Lang</button>
+  <button class="mbtn" onclick="showTab(2,document.querySelectorAll('.ptab')[2])"><span class="mi">🎨</span>Style</button>
+  <button class="mbtn" onclick="exportAs('png')"><span class="mi">⬇️</span>PNG</button>
+  <button class="mbtn" onclick="exportAs('jpg')"><span class="mi">💾</span>JPG</button>
 </div>
 
-  </header>  <!-- MAIN -->  <div class="flex-1 flex overflow-hidden"><!-- LEFT SIDEBAR -->
-<aside class="glass w-20 desktop-only border-l border-white/5 flex flex-col items-center gap-3 py-4">
+<input type="file" id="hidden-img" accept="image/*" style="display:none" onchange="loadImg(this)">
 
-  <div class="sidebar-btn">📝</div>
-  <div class="sidebar-btn">🖼️</div>
-  <div class="sidebar-btn">⬜</div>
-  <div class="sidebar-btn">🎨</div>
-  <div class="sidebar-btn">🌍</div>
-  <div class="sidebar-btn">📦</div>
-  <div class="sidebar-btn">⚙️</div>
+<script>
+/* ═══════════════════════════════ STATE ═══════════════════════════════ */
+const ST={
+  fmt:'square',lang:'en',font:'Playfair Display',
+  fontSize:68,headlineColor:'#ffffff',
+  tag:'Health Tourism',
+  headline:'World-Class Care, Global Destination',
+  sub:'Hair Transplant • Dental • IVF • Cosmetic Surgery',
+  body:'Connecting patients with top specialists across 12 medical disciplines. Your health journey begins here.',
+  cta:'Book Consultation',
+  s1n:'500+',s1l:'Specialists',s2n:'50+',s2l:'Countries',s3n:'10K+',s3l:'Patients',
+  brand:'TebMedTourism',url:'www.tebmedtourism.com',
+  img:null,
+};
+const DIMS={square:[1080,1080],vertical:[1080,1350],stories:[1080,1920],thumbnail:[1280,720]};
+const IMG_AREAS={
+  square:   [52,140,430,560,32],
+  vertical: [52,140,976,490,34],
+  stories:  [52,168,976,680,38],
+  thumbnail:[545,0,735,720,0],
+};
+const LANG_FONTS={en:'Playfair Display',fa:'Vazirmatn',ar:'Cairo',bn:'Hind Siliguri'};
+const RTL=['fa','ar'];
+const OBJ={};
+let currentScale=1;
 
-</aside>
+/* ═══════════════════════════════ FABRIC ══════════════════════════════ */
+const fc=new fabric.Canvas('c',{preserveObjectStacking:true,selection:true});
 
-<!-- CANVAS -->
-<main class="flex-1 flex items-center justify-center overflow-auto p-4 md:p-6" id="canvas-wrapper">
+/* ═══════════════════════════════ SCALE ═══════════════════════════════ */
+function calcScale(){
+  const a=document.getElementById('canvas-area');
+  const[w,h]=DIMS[ST.fmt];
+  return Math.min((a.clientWidth-32)/w,(a.clientHeight-32)/h,1);
+}
+function applyScale(sc){
+  const[w,h]=DIMS[ST.fmt];
+  currentScale=sc;
+  fc.setWidth(w*sc);fc.setHeight(h*sc);
+  fc.setViewportTransform([sc,0,0,sc,0,0]);
+  fc.requestRenderAll();
+}
+function fitToScreen(){applyScale(calcScale());}
+window.addEventListener('resize',fitToScreen);
 
-  <div id="canvas-container" class="rounded-[30px] overflow-hidden shadow-2xl border border-white/10 bg-black flex items-center justify-center mx-auto">
-    <canvas id="editorCanvas"></canvas>
-  </div>
+/* ═══════════════════════════════ HELPERS ═════════════════════════════ */
+function bgR(o){return new fabric.Rect({selectable:false,evented:false,hoverCursor:'default',...o});}
+function uiR(o){return new fabric.Rect({selectable:true,evented:true,hoverCursor:'move',...o});}
+function uiTB(t,o){return new fabric.Textbox(t,{selectable:true,evented:true,editable:true,hoverCursor:'text',...o});}
+function uiT(t,o){return new fabric.Text(t,{selectable:true,evented:true,hoverCursor:'move',...o});}
 
-</main>
+function addOrb(cx,cy,r,color){
+  fc.add(new fabric.Circle({
+    left:cx-r,top:cy-r,radius:r,
+    fill:new fabric.Gradient({type:'radial',gradientUnits:'pixels',
+      coords:{x1:r,y1:r,r1:0,x2:r,y2:r,r2:r},
+      colorStops:[{offset:0,color},{offset:1,color:'rgba(0,0,0,0)'}]}),
+    selectable:false,evented:false,hoverCursor:'default'}));
+}
+function addDots(w,h){
+  const pc=document.createElement('canvas');pc.width=40;pc.height=40;
+  const ctx=pc.getContext('2d');ctx.fillStyle='rgba(255,255,255,0.06)';
+  ctx.beginPath();ctx.arc(20,20,1,0,Math.PI*2);ctx.fill();
+  fc.add(bgR({left:0,top:0,width:w,height:h,fill:new fabric.Pattern({source:pc,repeat:'repeat'})}));
+}
+function glassCard(l,t,w,h,r=28,a=0.08){
+  return uiR({left:l,top:t,width:w,height:h,rx:r,ry:r,
+    fill:`rgba(255,255,255,${a})`,stroke:'rgba(255,255,255,0.16)',strokeWidth:1});
+}
+function decLine(x1,y1,x2,y2){
+  fc.add(new fabric.Line([x1,y1,x2,y2],{
+    stroke:new fabric.Gradient({type:'linear',gradientUnits:'pixels',coords:{x1:0,y1:0,x2:x2-x1,y2:0},
+      colorStops:[{offset:0,color:'rgba(0,183,209,.75)'},{offset:.6,color:'rgba(74,246,210,.4)'},{offset:1,color:'rgba(74,246,210,0)'}]}),
+    strokeWidth:2,selectable:false,evented:false}));
+}
+function makeStatGroup(left,top,w,h,num,lbl){
+  const nFS=Math.round(h*.36),lFS=Math.round(h*.18);
+  return new fabric.Group([
+    new fabric.Rect({left:0,top:0,width:w,height:h,rx:20,ry:20,
+      fill:'rgba(255,255,255,0.07)',stroke:'rgba(255,255,255,0.14)',strokeWidth:1}),
+    new fabric.Text(num,{left:w/2,top:h*.12,originX:'center',
+      fontSize:nFS,fill:'#4AF6D2',fontFamily:'Playfair Display',fontWeight:'700'}),
+    new fabric.Text(lbl,{left:w/2,top:h*.58,originX:'center',
+      fontSize:lFS,fill:'rgba(255,255,255,0.5)',fontFamily:'Inter'}),
+  ],{left,top,selectable:true,evented:true,hoverCursor:'move'});
+}
+function makeCTA(left,top,bw,bh,text,fs){
+  const btn=new fabric.Rect({left,top,width:bw,height:bh,rx:bh/2,ry:bh/2,
+    fill:new fabric.Gradient({type:'linear',gradientUnits:'pixels',coords:{x1:0,y1:0,x2:bw,y2:0},
+      colorStops:[{offset:0,color:'#00B7D1'},{offset:1,color:'#4AF6D2'}]}),
+    shadow:new fabric.Shadow({color:'rgba(0,183,209,.45)',blur:20,offsetX:0,offsetY:4}),
+    selectable:true,evented:true});
+  const txt=new fabric.Text(text,{left:left+bw/2,top:top+bh/2,originX:'center',originY:'center',
+    fontSize:fs,fill:'#082f49',fontFamily:'Inter',fontWeight:'700',selectable:false,evented:false});
+  OBJ.ctaBtn=btn;OBJ.ctaTxt=txt;
+  fc.add(btn,txt);
+}
+function makeLogo(x,y,sz){
+  const grp=new fabric.Group([
+    new fabric.Rect({left:0,top:0,width:sz,height:sz,rx:Math.round(sz*.27),ry:Math.round(sz*.27),
+      fill:new fabric.Gradient({type:'linear',gradientUnits:'pixels',coords:{x1:0,y1:0,x2:sz,y2:sz},
+        colorStops:[{offset:0,color:'#4AF6D2'},{offset:1,color:'#00B7D1'}]}),
+      shadow:new fabric.Shadow({color:'rgba(0,183,209,.4)',blur:16})}),
+    new fabric.Text('+T',{left:sz/2,top:sz/2,originX:'center',originY:'center',
+      fontSize:Math.round(sz*.4),fill:'#0F172A',fontFamily:'Playfair Display',fontWeight:'700'}),
+    new fabric.Text(ST.brand,{left:sz+10,top:sz/2,originY:'center',
+      fontSize:Math.round(sz*.42),fill:'#fff',fontFamily:'Inter',fontWeight:'700'}),
+  ],{left:x,top:y,selectable:true,evented:true,hoverCursor:'move'});
+  OBJ.logoGrp=grp;fc.add(grp);
+}
+function makeTag(cx,cy,text,fs){
+  const tmp=new fabric.Text(text,{fontSize:fs,fontFamily:'Inter',fontWeight:'500'});
+  const tw=tmp.width+36,th=tmp.height+16;
+  const pill=uiR({left:cx-tw/2,top:cy-th/2,width:tw,height:th,rx:th/2,ry:th/2,
+    fill:'rgba(0,183,209,0.15)',stroke:'rgba(0,183,209,0.38)',strokeWidth:1});
+  const label=uiT(text,{left:cx,top:cy,originX:'center',originY:'center',
+    fontSize:fs,fill:'#4AF6D2',fontFamily:'Inter',fontWeight:'500'});
+  OBJ.tagPill=pill;OBJ.tagTxt=label;
+  fc.add(pill,label);
+}
 
-<!-- RIGHT PANEL -->
-<aside class="glass w-[360px] desktop-only border-r border-white/5 overflow-y-auto p-5">
+/* Image area — contain-fit (no crop) */
+function buildImgArea(left,top,w,h,r=32){
+  const card=uiR({left,top,width:w,height:h,rx:r,ry:r,
+    fill:'rgba(255,255,255,0.05)',stroke:'rgba(255,255,255,0.12)',strokeWidth:1});
+  OBJ.imgCard=card;fc.add(card);
+  if(ST.img){
+    fabric.Image.fromURL(ST.img,img=>{
+      const scale=Math.min(w/img.width,h/img.height);
+      const sw=img.width*scale,sh=img.height*scale;
+      img.set({left:left+(w-sw)/2,top:top+(h-sh)/2,scaleX:scale,scaleY:scale,
+        selectable:true,evented:true,hoverCursor:'move'});
+      if(r>0) img.clipPath=new fabric.Rect({width:img.width,height:img.height,
+        rx:r/scale,ry:r/scale,originX:'center',originY:'center'});
+      const idx=fc._objects.indexOf(OBJ.imgCard);
+      fc.remove(OBJ.imgCard);OBJ.imgCard=null;
+      fc.insertAt(img,idx<0?0:idx,false);
+      OBJ.uploadedImg=img;fc.requestRenderAll();
+    },{crossOrigin:'anonymous'});
+  } else {
+    const hint=new fabric.Text('Upload Image\n(Style tab)',{
+      left:left+w/2,top:top+h/2,originX:'center',originY:'center',
+      fontSize:16,fill:'rgba(255,255,255,0.18)',fontFamily:'Inter',textAlign:'center',
+      selectable:false,evented:false});
+    OBJ.imgHint=hint;fc.add(hint);
+  }
+}
 
-  <!-- TABS -->
-  <div class="flex gap-2 mb-5">
-    <div class="tab-btn active">متن</div>
-    <div class="tab-btn">ترجمه</div>
-    <div class="tab-btn">فیلتر</div>
-    <div class="tab-btn">خروجی</div>
-  </div>
+/* ═══════════════════════════════ LAYOUTS ═════════════════════════════ */
+function buildScene(){
+  fc.clear();
+  const[W,H]=DIMS[ST.fmt];
+  applyScale(calcScale());
+  const isRTL=RTL.includes(ST.lang);
+  const ta=isRTL?'right':'left',dir=isRTL?'rtl':'ltr';
+  fc.add(bgR({left:0,top:0,width:W,height:H,fill:'#0F172A'}));
+  if(ST.fmt==='square')    buildSquare(W,H,ta,dir);
+  else if(ST.fmt==='vertical') buildVertical(W,H,ta,dir);
+  else if(ST.fmt==='stories')  buildStories(W,H,ta,dir);
+  else                         buildThumbnail(W,H,ta,dir);
+  fc.requestRenderAll();
+}
 
-  <!-- TEXT -->
-  <div class="mb-5">
-    <div class="property-title">تیتر اصلی</div>
-    <textarea id="headline" class="panel-textarea" rows="3">مراقبت پزشکی در سطح جهانی</textarea>
-  </div>
+function buildSquare(W,H,ta,dir){
+  const p=52,g=18,[aL,aT,aW,aH,aR]=IMG_AREAS.square;
+  const cX=aL+aW+g,cW=W-cX-p;
+  addOrb(-160,-160,680,'rgba(0,183,209,0.18)');addOrb(600,600,520,'rgba(74,246,210,0.1)');addDots(W,H);
+  buildImgArea(aL,aT,aW,aH,aR);makeLogo(p,p,48);makeTag(W-p-110,p+24,ST.tag,13);
+  const tc=glassCard(cX,140,cW,aH*.58,28);fc.add(tc);
+  decLine(cX+28,310,cX+80,310);
+  OBJ.hlObj=uiTB(ST.headline,{left:cX+28,top:158,width:cW-56,
+    fontSize:ST.fontSize*.72,fill:ST.headlineColor,fontFamily:ST.font,fontWeight:'700',
+    lineHeight:1.15,textAlign:ta,direction:dir});fc.add(OBJ.hlObj);
+  OBJ.subObj=uiTB(ST.sub,{left:cX+28,top:370,width:cW-56,
+    fontSize:14,fill:'rgba(74,246,210,0.85)',fontFamily:'Inter',textAlign:ta});fc.add(OBJ.subObj);
+  const bc=uiR({left:cX,top:140+aH*.58+g,width:cW,height:aH*.42-g,rx:28,ry:28,
+    fill:'rgba(0,183,209,0.09)',stroke:'rgba(0,183,209,0.2)',strokeWidth:1});fc.add(bc);
+  OBJ.bodyObj=uiTB(ST.body,{left:cX+24,top:140+aH*.58+g+22,width:cW-48,
+    fontSize:13,fill:'rgba(255,255,255,0.58)',fontFamily:'Inter',lineHeight:1.6,textAlign:ta});fc.add(OBJ.bodyObj);
+  makeCTA(cX+24,140+aH*.58+g+102,cW-48,48,ST.cta,14);
+  const sY=140+aH+g+16,sw=(W-p*2-g*2)/3,sh=H-sY-48;
+  [[ST.s1n,ST.s1l],[ST.s2n,ST.s2l],[ST.s3n,ST.s3l]].forEach(([n,l],i)=>fc.add(makeStatGroup(p+i*(sw+g),sY,sw,sh,n,l)));
+  OBJ.urlObj=uiT(ST.url,{left:W/2,top:H-28,originX:'center',originY:'bottom',
+    fontSize:13,fill:'rgba(255,255,255,0.28)',fontFamily:'Inter',textAlign:'center',letterSpacing:3});fc.add(OBJ.urlObj);
+}
 
-  <!-- LANG -->
-  <div class="grid grid-cols-2 gap-3 mb-5">
+function buildVertical(W,H,ta,dir){
+  const p=52,g=22,[aL,aT,aW,aH,aR]=IMG_AREAS.vertical;
+  addOrb(-120,-80,580,'rgba(0,183,209,0.2)');addOrb(700,950,500,'rgba(74,246,210,0.12)');addDots(W,H);
+  buildImgArea(aL,aT,aW,aH,aR);makeLogo(p,p,46);makeTag(W-p-100,p+23,ST.tag,13);
+  decLine(p+32,710,p+90,710);
+  const tY=aT+aH+g,tc=glassCard(p,tY,W-p*2,380,28);fc.add(tc);
+  OBJ.hlObj=uiTB(ST.headline,{left:p+32,top:tY+30,width:W-p*2-64,
+    fontSize:ST.fontSize*.85,fill:ST.headlineColor,fontFamily:ST.font,fontWeight:'700',
+    lineHeight:1.15,textAlign:ta,direction:dir});fc.add(OBJ.hlObj);
+  OBJ.subObj=uiTB(ST.sub,{left:p+32,top:tY+160,width:W-p*2-64,
+    fontSize:15,fill:'rgba(74,246,210,0.85)',fontFamily:'Inter',textAlign:ta});fc.add(OBJ.subObj);
+  OBJ.bodyObj=uiTB(ST.body,{left:p+32,top:tY+205,width:W-p*2-64,
+    fontSize:14,fill:'rgba(255,255,255,0.55)',fontFamily:'Inter',lineHeight:1.6,textAlign:ta});fc.add(OBJ.bodyObj);
+  makeCTA(p+32,tY+320,280,52,ST.cta,16);
+  const sY=tY+410,sw=(W-p*2-g*2)/3,sh=H-sY-52;
+  [[ST.s1n,ST.s1l],[ST.s2n,ST.s2l],[ST.s3n,ST.s3l]].forEach(([n,l],i)=>fc.add(makeStatGroup(p+i*(sw+g),sY,sw,sh,n,l)));
+  OBJ.urlObj=uiT(ST.url,{left:W/2,top:H-28,originX:'center',originY:'bottom',
+    fontSize:13,fill:'rgba(255,255,255,0.28)',fontFamily:'Inter',textAlign:'center',letterSpacing:3});fc.add(OBJ.urlObj);
+}
 
-    <div>
-      <div class="property-title">زبان</div>
-      <select id="language" class="panel-select">
-        <option value="fa">فارسی</option>
-        <option value="en">English</option>
-        <option value="ar">العربية</option>
-        <option value="bn">বাংলা</option>
-      </select>
-    </div>
+function buildStories(W,H,ta,dir){
+  const p=52,g=28,[aL,aT,aW,aH,aR]=IMG_AREAS.stories;
+  addOrb(-60,160,720,'rgba(0,183,209,0.22)');addOrb(620,1150,600,'rgba(74,246,210,0.12)');addOrb(180,1700,500,'rgba(0,183,209,0.1)');addDots(W,H);
+  buildImgArea(aL,aT,aW,aH,aR);makeLogo(p,64,52);makeTag(W-p-100,90,ST.tag,14);
+  const hlY=aT+aH+g;decLine(p,hlY+180,p+110,hlY+180);
+  OBJ.hlObj=uiTB(ST.headline,{left:p,top:hlY,width:W-p*2,
+    fontSize:ST.fontSize*1.1,fill:ST.headlineColor,fontFamily:ST.font,fontWeight:'700',
+    lineHeight:1.08,textAlign:ta,direction:dir});fc.add(OBJ.hlObj);
+  OBJ.subObj=uiTB(ST.sub,{left:p,top:hlY+200,width:W-p*2,
+    fontSize:18,fill:'rgba(74,246,210,0.85)',fontFamily:'Inter',textAlign:ta});fc.add(OBJ.subObj);
+  const bY=hlY+260,bc=glassCard(p,bY,W-p*2,200,34);fc.add(bc);
+  OBJ.bodyObj=uiTB(ST.body,{left:p+32,top:bY+28,width:W-p*2-64,
+    fontSize:17,fill:'rgba(255,255,255,0.6)',fontFamily:'Inter',lineHeight:1.65,textAlign:ta});fc.add(OBJ.bodyObj);
+  makeCTA(p+32,bY+145,320,60,ST.cta,18);
+  const sY=bY+220+g,sw=(W-p*2-g*2)/3,sh=H-sY-70;
+  [[ST.s1n,ST.s1l],[ST.s2n,ST.s2l],[ST.s3n,ST.s3l]].forEach(([n,l],i)=>fc.add(makeStatGroup(p+i*(sw+g),sY,sw,sh,n,l)));
+  OBJ.urlObj=uiT(ST.url,{left:W/2,top:H-38,originX:'center',originY:'bottom',
+    fontSize:15,fill:'rgba(255,255,255,0.28)',fontFamily:'Inter',textAlign:'center',letterSpacing:4});fc.add(OBJ.urlObj);
+}
 
-    <div>
-      <div class="property-title">فونت</div>
-      <select id="fontFamily" class="panel-select">
-        <option value="Vazirmatn">Vazirmatn</option>
-        <option value="Lalezar">Lalezar</option>
-        <option value="Inter">Inter</option>
-        <option value="Montserrat">Montserrat</option>
-        <option value="Playfair Display">Playfair</option>
-        <option value="Cairo">Cairo</option>
-        <option value="Tajawal">Tajawal</option>
-        <option value="Hind Siliguri">Hind Siliguri</option>
-      </select>
-    </div>
+function buildThumbnail(W,H,ta,dir){
+  const p=46,g=18,[aL,aT,aW,aH,aR]=IMG_AREAS.thumbnail;
+  addOrb(-100,60,500,'rgba(0,183,209,0.2)');addOrb(920,400,420,'rgba(74,246,210,0.1)');addDots(W,H);
+  buildImgArea(aL,aT,aW,aH,aR);
+  fc.add(new fabric.Rect({left:aL,top:0,width:200,height:H,
+    fill:new fabric.Gradient({type:'linear',gradientUnits:'pixels',coords:{x1:0,y1:0,x2:200,y2:0},
+      colorStops:[{offset:0,color:'rgba(15,23,42,.88)'},{offset:1,color:'rgba(15,23,42,0)'}]}),
+    selectable:false,evented:false}));
+  makeLogo(p,p,42);makeTag(p+170,p+21,ST.tag,12);decLine(p,220,p+70,220);
+  OBJ.hlObj=uiTB(ST.headline,{left:p,top:140,width:aL-p-20,
+    fontSize:ST.fontSize*.68,fill:ST.headlineColor,fontFamily:ST.font,fontWeight:'700',
+    lineHeight:1.12,textAlign:ta,direction:dir});fc.add(OBJ.hlObj);
+  OBJ.subObj=uiTB(ST.sub,{left:p,top:330,width:aL-p-20,
+    fontSize:13,fill:'rgba(74,246,210,0.85)',fontFamily:'Inter',textAlign:ta});fc.add(OBJ.subObj);
+  OBJ.bodyObj=uiTB(ST.body,{left:p,top:368,width:aL-p-20,
+    fontSize:12,fill:'rgba(255,255,255,0.5)',fontFamily:'Inter',lineHeight:1.6,textAlign:ta});fc.add(OBJ.bodyObj);
+  makeCTA(p,470,aL-p*2,46,ST.cta,14);
+  const sY=H-106,sw=(aL-p-g*2)/3,sh=88;
+  [[ST.s1n,ST.s1l],[ST.s2n,ST.s2l],[ST.s3n,ST.s3l]].forEach(([n,l],i)=>fc.add(makeStatGroup(p+i*(sw+g),sY,sw,sh,n,l)));
+  OBJ.urlObj=uiT(ST.url,{left:p,top:H-14,originY:'bottom',
+    fontSize:11,fill:'rgba(255,255,255,0.28)',fontFamily:'Inter',letterSpacing:3});fc.add(OBJ.urlObj);
+}
 
-  </div>
+/* ═══════════════════════════════ LIVE UPDATE ═════════════════════════ */
+function lu(key,val){
+  ST[key]=val;
+  if(['s1n','s1l','s2n','s2l','s3n','s3l','brand'].includes(key)){buildScene();return;}
+  switch(key){
+    case 'headline':     if(OBJ.hlObj)  {OBJ.hlObj.set('text',val);  fc.requestRenderAll();}break;
+    case 'sub':          if(OBJ.subObj) {OBJ.subObj.set('text',val); fc.requestRenderAll();}break;
+    case 'body':         if(OBJ.bodyObj){OBJ.bodyObj.set('text',val);fc.requestRenderAll();}break;
+    case 'cta':          if(OBJ.ctaTxt) {OBJ.ctaTxt.set('text',val); fc.requestRenderAll();}break;
+    case 'tag':          if(OBJ.tagTxt) {OBJ.tagTxt.set('text',val); fc.requestRenderAll();}break;
+    case 'url':          if(OBJ.urlObj) {OBJ.urlObj.set('text',val); fc.requestRenderAll();}break;
+    case 'headlineColor':if(OBJ.hlObj)  {OBJ.hlObj.set('fill',val);  fc.requestRenderAll();}break;
+    case 'font':
+      if(OBJ.hlObj){OBJ.hlObj.set('fontFamily',val);fc.requestRenderAll();}
+      document.getElementById('p-font').value=val;break;
+    case 'fontSize':
+      if(OBJ.hlObj){const m={square:.72,vertical:.85,stories:1.1,thumbnail:.68};
+        OBJ.hlObj.set('fontSize',val*(m[ST.fmt]||1));fc.requestRenderAll();}break;
+  }
+}
 
-  <!-- FONT SIZE -->
-  <div class="mb-5">
-    <div class="property-title">اندازه فونت</div>
-    <input type="range" id="fontSize" min="20" max="120" value="64" class="w-full">
-  </div>
+/* ═══════════════════════════════════════════════════════════════════════
+   SIMULTANEOUS TRANSLATION — MyMemory free API (no key required)
+   Works in any browser, even in a downloaded local HTML file.
+═══════════════════════════════════════════════════════════════════════ */
+let _trTimer=null;
 
-  <!-- COLOR -->
-  <div class="mb-5">
-    <div class="property-title">رنگ متن</div>
-    <input type="color" id="textColor" value="#ffffff" class="w-full h-12 rounded-xl overflow-hidden border-none bg-transparent">
-  </div>
+/* Called when user types in the main headline field */
+function onHeadlineInput(val){
+  ST.headline=val;
+  document.getElementById('tr-en').value=val;          // keep EN field in sync
+  if(OBJ.hlObj){OBJ.hlObj.set('text',val);fc.requestRenderAll();}
+  scheduleTranslation(val);
+}
 
-  <!-- BG IMAGE -->
-  <div class="mb-5">
-    <div class="property-title">تصویر پس‌زمینه</div>
-    <input type="file" id="bgUpload" class="panel-input" accept="image/*">
-  </div>
+/* Called when user types directly in the English translation field */
+function onEnInput(val){
+  ST.headline=val;
+  document.getElementById('p-headline').value=val;     // keep main field in sync
+  if(OBJ.hlObj){OBJ.hlObj.set('text',val);fc.requestRenderAll();}
+  scheduleTranslation(val);
+}
 
-  <!-- TRANSLATION -->
-  <div class="space-y-4">
+/* Manual edits to FA / AR / BN fields — apply to canvas if that lang is active */
+function onManualTr(lang,val){
+  if(ST.lang===lang&&OBJ.hlObj){
+    ST.headline=val;
+    document.getElementById('p-headline').value=val;
+    OBJ.hlObj.set('text',val);fc.requestRenderAll();
+  }
+}
 
-    <div>
-      <div class="property-title">English</div>
-      <textarea class="panel-textarea" id="transEn">World-Class Medical Care</textarea>
-    </div>
+function scheduleTranslation(text){
+  clearTimeout(_trTimer);
+  if(!text.trim())return;
+  _trTimer=setTimeout(()=>runTranslation(text),700);
+}
 
-    <div>
-      <div class="property-title">العربية</div>
-      <textarea class="panel-textarea" id="transAr">رعاية طبية عالمية المستوى</textarea>
-    </div>
+function setTrUI(loading){
+  document.getElementById('tr-loading').classList.toggle('show',loading);
+  document.getElementById('tr-ok').classList.remove('show');
+}
 
-    <div>
-      <div class="property-title">বাংলা</div>
-      <textarea class="panel-textarea" id="transBn">বিশ্বমানের চিকিৎসা সেবা</textarea>
-    </div>
+/* Decode HTML entities that MyMemory sometimes returns */
+function decodeEntities(str){
+  const el=document.createElement('textarea');
+  el.innerHTML=str;
+  return el.value;
+}
 
-  </div>
+/*
+ * MyMemory Translation API
+ * https://api.mymemory.translated.net
+ * Free tier: 500 words/day per IP, no API key needed, CORS-enabled.
+ * We fire three parallel requests: en→fa, en→ar, en→bn
+ */
+async function runTranslation(text){
+  if(!text.trim())return;
+  setTrUI(true);
 
-</aside>
-
-  </div></div><!-- MOBILE BOTTOM BAR --><div id="mobile-bottom-bar" class="hidden fixed bottom-0 left-0 right-0 h-16 glass border-t border-white/10 items-center justify-around z-50">
-  <button>متن</button>
-  <button>تصویر</button>
-  <button>شکل</button>
-  <button>ترجمه</button>
-  <button>خروجی</button>
-</div><script>
-
-const canvas = new fabric.Canvas('editorCanvas', {
-  width: 1080,
-  height: 1350,
-  backgroundColor: '#111827',
-  preserveObjectStacking: true,
-  selection: true
-});
-
-canvas.setBackgroundColor('#111827', canvas.renderAll.bind(canvas));
-
-// ===== RESPONSIVE CANVAS =====
-function fitCanvasToScreen(){
-
-  const wrapper = document.getElementById('canvas-container');
-
-  // Stable fixed scaling for Fabric.js mobile rendering
-  const isMobile = window.innerWidth < 768;
-
-  const scale = isMobile ? 0.28 : 0.5;
-
-  const renderWidth = 1080 * scale;
-  const renderHeight = 1350 * scale;
-
-  wrapper.style.width = renderWidth + 'px';
-  wrapper.style.height = renderHeight + 'px';
-
-  // Keep internal Fabric resolution original
-  canvas.setDimensions({
-    width: renderWidth,
-    height: renderHeight
-  });
-
-  // Use viewportTransform only
-  canvas.viewportTransform = [
-    scale,
-    0,
-    0,
-    scale,
-    0,
-    0
+  const targets=[
+    {lang:'fa', pair:'en|fa'},   // Persian / Farsi
+    {lang:'ar', pair:'en|ar'},   // Arabic
+    {lang:'bn', pair:'en|bn'},   // Bengali
   ];
 
-  canvas.calcOffset();
-  canvas.requestRenderAll();
+  try{
+    /* Fire all three requests in parallel */
+    const results=await Promise.all(
+      targets.map(({lang,pair})=>
+        fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${pair}`)
+          .then(r=>{
+            if(!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+          })
+          .then(data=>{
+            const raw=data?.responseData?.translatedText||'';
+            /* MyMemory returns 403 / error strings on failure — filter them */
+            if(!raw||raw.startsWith('INVALID')||data?.responseStatus===403) return {lang,text:''};
+            return {lang,text:decodeEntities(raw)};
+          })
+          .catch(()=>({lang,text:''}))
+      )
+    );
 
-}
+    let anyUpdated=false;
+    results.forEach(({lang,text:translated})=>{
+      if(!translated) return;
+      anyUpdated=true;
+      document.getElementById(`tr-${lang}`).value=translated;
 
-window.addEventListener('resize', fitCanvasToScreen);
-
-// ===== BACKGROUND =====
-const bgRect = new fabric.Rect({
-  left: 0,
-  top: 0,
-  width: 1080,
-  height: 1350,
-  fill: '#0f172a',
-  selectable: false,
-  evented: false
-});
-
-canvas.add(bgRect);
-canvas.sendToBack(bgRect);
-
-// ===== GLASS CARD =====
-const glassCard = new fabric.Rect({
-  left: 80,
-  top: 120,
-  width: 920,
-  height: 1100,
-  rx: 40,
-  ry: 40,
-  fill: 'rgba(255,255,255,0.08)',
-  stroke: 'rgba(255,255,255,0.12)',
-  strokeWidth: 1,
-  selectable: false,
-  evented: false
-});
-
-canvas.add(glassCard);
-
-// ===== HEADLINE =====
-const headline = new fabric.Textbox('مراقبت پزشکی در سطح جهانی', {
-  left: 140,
-  top: 280,
-  width: 780,
-  fontSize: 68,
-  fill: '#ffffff',
-  fontFamily: 'Vazirmatn',
-  textAlign: 'center',
-  editable: true,
-  lineHeight: 1.4,
-  fontWeight: '700'
-});
-
-canvas.add(headline);
-canvas.setActiveObject(headline);
-
-// ===== SUBTITLE =====
-const subtitle = new fabric.Textbox('Hair Transplant • Dental • IVF • Cosmetic Surgery', {
-  left: 170,
-  top: 470,
-  width: 740,
-  fontSize: 32,
-  fill: '#4af6d2',
-  fontFamily: 'Inter',
-  textAlign: 'center'
-});
-
-canvas.add(subtitle);
-
-// ===== CTA =====
-const cta = new fabric.Rect({
-  left: 340,
-  top: 980,
-  width: 400,
-  height: 96,
-  rx: 24,
-  ry: 24,
-  fill: '#22d3ee',
-  shadow: '0 0 30px rgba(34,211,238,0.35)'
-});
-
-const ctaText = new fabric.Text('Book Consultation', {
-  left: 395,
-  top: 1012,
-  fill: '#082f49',
-  fontSize: 30,
-  fontFamily: 'Inter',
-  fontWeight: '700'
-});
-
-canvas.add(cta);
-canvas.add(ctaText);
-
-fitCanvasToScreen();
-
-// ===== LIVE CONTROLS =====
-document.getElementById('headline').addEventListener('input', e => {
-  headline.text = e.target.value;
-  canvas.renderAll();
-});
-
-// FONT
-
-document.getElementById('fontFamily').addEventListener('change', e => {
-  headline.fontFamily = e.target.value;
-  canvas.renderAll();
-});
-
-// SIZE
-
-document.getElementById('fontSize').addEventListener('input', e => {
-  headline.fontSize = parseInt(e.target.value);
-  canvas.renderAll();
-});
-
-// COLOR
-
-document.getElementById('textColor').addEventListener('input', e => {
-  headline.fill = e.target.value;
-  canvas.renderAll();
-});
-
-// LANGUAGE
-
-document.getElementById('language').addEventListener('change', e => {
-
-  const lang = e.target.value;
-
-  if(lang === 'fa'){
-    headline.fontFamily = 'Vazirmatn';
-    headline.textAlign = 'center';
-  }
-
-  if(lang === 'ar'){
-    headline.fontFamily = 'Cairo';
-  }
-
-  if(lang === 'bn'){
-    headline.fontFamily = 'Hind Siliguri';
-  }
-
-  if(lang === 'en'){
-    headline.fontFamily = 'Inter';
-  }
-
-  document.getElementById('fontFamily').value = headline.fontFamily;
-
-  canvas.renderAll();
-
-});
-
-// ===== IMAGE UPLOAD =====
-document.getElementById('bgUpload').addEventListener('change', function(e){
-
-  const reader = new FileReader();
-
-  reader.onload = function(f){
-
-    fabric.Image.fromURL(f.target.result, function(img){
-
-      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-        scaleX: canvas.width / img.width,
-        scaleY: canvas.height / img.height
-      });
-
+      /* If this language is currently active on canvas, update it live */
+      if(ST.lang===lang&&OBJ.hlObj){
+        ST.headline=translated;
+        document.getElementById('p-headline').value=translated;
+        OBJ.hlObj.set('text',translated);
+        fc.requestRenderAll();
+      }
     });
 
+    if(anyUpdated){
+      const ok=document.getElementById('tr-ok');
+      ok.classList.add('show');
+      setTimeout(()=>ok.classList.remove('show'),2500);
+    }
+  }catch(err){
+    console.warn('Translation error:',err);
+  }finally{
+    setTrUI(false);
+  }
+}
+
+/* ═══════════════════════════════ LANGUAGE SWITCH ════════════════════ */
+function changeLang(lang){
+  ST.lang=lang;
+  const font=LANG_FONTS[lang]||'Playfair Display';
+  ST.font=font;
+  document.getElementById('p-font').value=font;
+
+  /* Pull the stored translation for this language */
+  const trMap={en:'tr-en',fa:'tr-fa',ar:'tr-ar',bn:'tr-bn'};
+  const text=document.getElementById(trMap[lang]).value.trim();
+  if(text){
+    ST.headline=text;
+    document.getElementById('p-headline').value=text;
   }
 
-  reader.readAsDataURL(e.target.files[0]);
+  const isRTL=RTL.includes(lang);
+  if(OBJ.hlObj){
+    OBJ.hlObj.set({text:ST.headline,fontFamily:font,
+      textAlign:isRTL?'right':'left',direction:isRTL?'rtl':'ltr',fill:ST.headlineColor});
+    fc.requestRenderAll();
+  }
+}
 
+/* ═══════════════════════════════ FORMAT ═════════════════════════════ */
+function setFmt(f,btn){
+  ST.fmt=f;
+  document.querySelectorAll('.fmt-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  buildScene();
+}
+function setFmtPanel(f){
+  ST.fmt=f;
+  document.querySelectorAll('[data-fmt]').forEach(b=>b.classList.toggle('active',b.dataset.fmt===f));
+  buildScene();
+}
+
+/* ═══════════════════════════════ IMAGE ══════════════════════════════ */
+function loadImg(inp){
+  const file=inp.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    ST.img=e.target.result;
+    const t=document.getElementById('thumb-preview');t.src=ST.img;t.style.display='block';
+    buildScene();
+  };
+  r.readAsDataURL(file);
+}
+function removeImg(){
+  ST.img=null;
+  document.getElementById('thumb-preview').style.display='none';
+  document.getElementById('img-file').value='';
+  buildScene();
+}
+
+/* ═══════════════════════════════ EXPORT ═════════════════════════════ */
+function exportAs(fmt){
+  document.getElementById('export-overlay').classList.add('show');
+  document.getElementById('export-msg').textContent=`Rendering ${fmt.toUpperCase()} at full resolution…`;
+  setTimeout(()=>{
+    const[dw,dh]=DIMS[ST.fmt];
+    const prevVT=fc.viewportTransform.slice();
+    const prevW=fc.width,prevH=fc.height;
+    fc.setViewportTransform([1,0,0,1,0,0]);
+    fc.setWidth(dw);fc.setHeight(dh);fc.renderAll();
+    let url;
+    try{url=fc.toDataURL({format:fmt==='png'?'png':'jpeg',quality:1});}
+    catch(e){console.error(e);alert('Export failed.\n'+e.message);}
+    finally{
+      fc.setViewportTransform(prevVT);fc.setWidth(prevW);fc.setHeight(prevH);fc.requestRenderAll();
+      document.getElementById('export-overlay').classList.remove('show');
+    }
+    if(url){const a=document.createElement('a');a.download=`TebMedTourism_${ST.fmt}_${Date.now()}.${fmt}`;a.href=url;document.body.appendChild(a);a.click();document.body.removeChild(a);}
+  },80);
+}
+
+/* ═══════════════════════════════ SHAPES & FX ════════════════════════ */
+function addRect(){const r=new fabric.Rect({left:200,top:200,width:220,height:120,rx:20,ry:20,fill:'rgba(0,183,209,0.18)',stroke:'#4AF6D2',strokeWidth:2});fc.add(r);fc.setActiveObject(r);fc.requestRenderAll();}
+function addCircle(){const c=new fabric.Circle({left:300,top:300,radius:80,fill:'rgba(255,255,255,0.1)',stroke:'#4AF6D2',strokeWidth:2});fc.add(c);fc.setActiveObject(c);fc.requestRenderAll();}
+function addTri(){const t=new fabric.Triangle({left:300,top:300,width:140,height:120,fill:'rgba(74,246,210,0.2)',stroke:'#4AF6D2',strokeWidth:2});fc.add(t);fc.setActiveObject(t);fc.requestRenderAll();}
+function addLine(){const l=new fabric.Line([200,400,600,400],{stroke:'#4AF6D2',strokeWidth:3});fc.add(l);fc.setActiveObject(l);fc.requestRenderAll();}
+function applyGlow(color){const o=fc.getActiveObject();if(!o)return;o.set({shadow:color?new fabric.Shadow({color,blur:30,offsetX:0,offsetY:0}):null});fc.requestRenderAll();}
+function setOpacity(val){const o=fc.getActiveObject();if(!o)return;o.set('opacity',val/100);fc.requestRenderAll();}
+function deleteSel(){
+  const o=fc.getActiveObject();if(!o)return;
+  if(o.type==='activeSelection')o.forEachObject(obj=>fc.remove(obj)),fc.discardActiveObject();
+  else fc.remove(o);
+  fc.requestRenderAll();
+}
+function toolAct(t){
+  switch(t){
+    case 'text':   showTab(0,document.querySelectorAll('.ptab')[0]);document.getElementById('p-headline').focus();break;
+    case 'img':    document.getElementById('hidden-img').click();break;
+    case 'rect':   addRect();break;
+    case 'circle': addCircle();break;
+    case 'tri':    addTri();break;
+    case 'line':   addLine();break;
+    case 'glow':   applyGlow('#4AF6D2');break;
+    case 'noglow': applyGlow(null);break;
+    case 'del':    deleteSel();break;
+    case 'back':   {const o=fc.getActiveObject();if(o)fc.sendToBack(o);}break;
+    case 'front':  {const o=fc.getActiveObject();if(o)fc.bringToFront(o);}break;
+  }
+}
+
+/* ═══════════════════════════════ ZOOM ═══════════════════════════════ */
+fc.on('mouse:wheel',opt=>{
+  let z=fc.getZoom();z*=0.999**opt.e.deltaY;z=Math.min(Math.max(z,.2),5);
+  fc.zoomToPoint({x:opt.e.offsetX,y:opt.e.offsetY},z);
+  opt.e.preventDefault();opt.e.stopPropagation();
+  const zi=document.getElementById('zoom-ind');
+  zi.textContent=Math.round(z*100)+'%';zi.classList.add('show');
+  clearTimeout(zi._t);zi._t=setTimeout(()=>zi.classList.remove('show'),1300);
+});
+document.getElementById('canvas-area').addEventListener('dblclick',e=>{
+  if(e.target===document.getElementById('canvas-area')){
+    fitToScreen();fc.setViewportTransform([currentScale,0,0,currentScale,0,0]);fc.requestRenderAll();
+  }
+});
+document.addEventListener('keydown',e=>{
+  if((e.key==='Delete'||e.key==='Backspace')&&!e.target.matches('input,textarea,select'))deleteSel();
 });
 
-// ===== EXPORT =====
-function exportPNG(){
-
-  const link = document.createElement('a');
-  link.download = 'tebmed-cover.png';
-  link.href = canvas.toDataURL({
-    format: 'png',
-    quality: 1
-  });
-
-  link.click();
-
+/* ═══════════════════════════════ PANEL TABS ════════════════════════ */
+function showTab(idx,btn){
+  document.querySelectorAll('.ptab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.psec').forEach((s,i)=>s.classList.toggle('active',i===idx));
 }
 
-function exportJPG(){
-
-  const link = document.createElement('a');
-  link.download = 'tebmed-cover.jpg';
-  link.href = canvas.toDataURL({
-    format: 'jpeg',
-    quality: 1
-  });
-
-  link.click();
-
-}
-
-// ===== ZOOM =====
-// Wheel zoom removed for mobile stability
-
-// ===== REAL SIDEBAR ACTIONS =====
-
-function addRectangle(){
-
-  const rect = new fabric.Rect({
-    left: 240,
-    top: 720,
-    width: 240,
-    height: 140,
-    fill: 'rgba(0,183,209,0.18)',
-    rx: 22,
-    ry: 22,
-    stroke: '#4af6d2',
-    strokeWidth: 2
-  });
-
-  canvas.add(rect);
-  canvas.setActiveObject(rect);
-  canvas.renderAll();
-
-}
-
-function addCircle(){
-
-  const circle = new fabric.Circle({
-    radius: 80,
-    fill: 'rgba(255,255,255,0.12)',
-    left: 380,
-    top: 760,
-    stroke: '#4af6d2',
-    strokeWidth: 2
-  });
-
-  canvas.add(circle);
-  canvas.setActiveObject(circle);
-  canvas.renderAll();
-
-}
-
-function applyGlow(){
-
-  const active = canvas.getActiveObject();
-
-  if(active){
-
-    active.set({
-      shadow: '0 0 30px rgba(74,246,210,0.7)'
-    });
-
-    canvas.renderAll();
-
-  }
-
-}
-
-function translateHeadline(){
-
-  const lang = document.getElementById('language').value;
-
-  if(lang === 'fa'){
-    headline.text = document.getElementById('headline').value;
-    headline.fontFamily = 'Vazirmatn';
-  }
-
-  if(lang === 'en'){
-    headline.text = document.getElementById('transEn').value;
-    headline.fontFamily = 'Inter';
-  }
-
-  if(lang === 'ar'){
-    headline.text = document.getElementById('transAr').value;
-    headline.fontFamily = 'Cairo';
-  }
-
-  if(lang === 'bn'){
-    headline.text = document.getElementById('transBn').value;
-    headline.fontFamily = 'Hind Siliguri';
-  }
-
-  canvas.renderAll();
-
-}
-
-// ===== SIDEBAR INTERACTIONS =====
-const tabButtons = document.querySelectorAll('.tab-btn');
-
-tabButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    tabButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  });
-});
-
-// ===== TOOL SIDEBAR =====
-const sidebarButtons = document.querySelectorAll('.sidebar-btn');
-
-sidebarButtons.forEach((btn, index) => {
-
-  btn.addEventListener('click', () => {
-
-    sidebarButtons.forEach(b => {
-      b.style.background = 'rgba(255,255,255,0.03)';
-      b.style.borderColor = 'rgba(255,255,255,0.06)';
-    });
-
-    btn.style.background = 'rgba(0,183,209,0.18)';
-    btn.style.borderColor = 'rgba(74,246,210,0.3)';
-
-    if(index === 0){
-      document.getElementById('headline').focus();
-    }
-
-    if(index === 2){
-      addCircle();
-    }
-
-    if(index === 3){
-      translateHeadline();
-    }
-
-  }
-
-});
-
-// ===== FIXED MOBILE RESPONSIVE =====
-fitCanvasToScreen();
-
-</script></body>
+/* ═══════════════════════════════ INIT ═══════════════════════════════ */
+document.fonts.ready.then(()=>buildScene());
+setTimeout(buildScene,700);
+</script>
+</body>
 </html>
